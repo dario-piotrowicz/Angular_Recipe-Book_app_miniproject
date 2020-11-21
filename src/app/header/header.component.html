@@ -2,9 +2,16 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <a href="#" class="navbar-brand">Recipe Book</a>
+      <button
+        type="button"
+        class="navbar-toggler"
+        (click)="navbarCollapsed = !navbarCollapsed"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
 
-    <div class="collapse navbar-collapse">
+    <div class="navbar-collapse" [class.collapse]="navbarCollapsed">
       <ul class="navbar-nav mr-auto">
         <li>
           <a href="#" class="nav-link">Recipes</a>
