@@ -1,1 +1,22 @@
-<app-recipes-list-item></app-recipes-list-item>
+<div class="row">
+  <div class="col-12">
+    <a
+      *ngFor="let recipe of recipes"
+      href="#"
+      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+    >
+      <div>
+        <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
+        <p class="list-group-item-text">{{ recipe.description }}</p>
+      </div>
+      <div>
+        <img
+          [src]="recipe.imageUrl"
+          [alt]="recipe.name"
+          class="img-responsive"
+        />
+      </div>
+      <!-- <app-recipes-list-item></app-recipes-list-item> -->
+    </a>
+  </div>
+</div>
