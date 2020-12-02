@@ -1,27 +1,9 @@
-# RecipeBookApp
+# RecipeBook Angular Miniproject
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.5.
+This is a simple miniproject I'm doing following an Angular course ( [Angular - The Complete Guide (2020 Edition) by Maximilian Schwarzmüller](https://www.udemy.com/course/the-complete-guide-to-angular-2/) ).
 
-## Development server
+The miniproject looks a bit rather basic but I am doing it to refresh my Angular skills and to possibly improve and fill basic knowledge gaps I may have.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Pratically everything in this repo has been done by following the course, the only exception being the usage of bootstrap.
+\
+During the course the instructor asks to install and use Boostrap version 3, I decided to go with version 4 instead and adapt what he implements using version 3 in version 4, so that this can just help me play around and familiarize a bit more with boostrap (css framework which I am only vaguely familiar with).
