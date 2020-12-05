@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   public navbarCollapsed = true;
+  @Output() linkSelection = new EventEmitter<string>();
+
+  public onLinkSelected(selectionName: string): void {
+    this.linkSelection.emit(selectionName);
+  }
 }
