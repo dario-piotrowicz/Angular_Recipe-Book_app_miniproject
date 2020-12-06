@@ -5,9 +5,12 @@
 </div>
 <div class="row">
   <div class="col-md-5">
-    <app-recipes-list></app-recipes-list>
+    <app-recipes-list (recipeSelected)="onRecipeSelected($event)"></app-recipes-list>
   </div>
   <div class="col-md-7">
-    <app-recipe-details></app-recipe-details>
+    <app-recipe-details *ngIf="selectedRecipe; else noRecipe" [recipe]="selectedRecipe"></app-recipe-details>
+    <ng-template #noRecipe>
+      <p>No recipe selected, please select one</p>
+    </ng-template>
   </div>
 </div>
