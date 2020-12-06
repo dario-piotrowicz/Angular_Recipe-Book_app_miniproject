@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-10">
-    <app-shopping-list-editor></app-shopping-list-editor>
+    <app-shopping-list-editor (newIngredientAdded)="onNewIngredientAdded($event)"></app-shopping-list-editor>
     <hr />
-    <app-shopping-list></app-shopping-list>
+    <app-shopping-list [list]="IngredientsList"></app-shopping-list>
   </div>
 </div>
