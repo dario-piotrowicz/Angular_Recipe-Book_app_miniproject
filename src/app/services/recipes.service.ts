@@ -30,7 +30,7 @@ export class RecipesService {
   }
 
   public get onRecipeSelected(): Observable<Recipe> {
-    return this.selectedRecipeObs as Observable<Recipe>;
+    return this.selectedRecipeObs.asObservable();
   }
 
   public selectRecipe(recipe: Recipe) {
