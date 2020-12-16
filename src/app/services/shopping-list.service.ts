@@ -20,8 +20,10 @@ export class ShoppingListService {
     return this._ingredientsList.slice();
   }
 
-  public addItemToIngredientsList(item: Ingredient){
-    this._ingredientsList.push({...item});
+  public addItemsToIngredientsList(items: Ingredient[]){
+    items.forEach(
+      item => this._ingredientsList.push({...item})
+    );
     this._ingredientsListChanged.next();
   }
 

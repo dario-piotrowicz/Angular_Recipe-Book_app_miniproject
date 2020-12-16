@@ -18,7 +18,7 @@ export class ShoppingListEditorComponent implements OnInit {
 
   public addIngredient(): void {
     const newIngredient = new Ingredient(this.newIngredientName, this.newIngredientAmount);
-    this.shoppingListService.addItemToIngredientsList(newIngredient);
+    this.shoppingListService.addItemsToIngredientsList([newIngredient]);
     this.newIngredientName = null;
     this.newIngredientAmount = null;
   }
