@@ -1,6 +1,6 @@
 # RecipeBook Angular Miniproject
 
-This is a simple miniproject I'm doing following an Angular course ( [Angular - The Complete Guide (2020 Edition) by Maximilian Schwarzmüller](https://www.udemy.com/course/the-complete-guide-to-angular-2/) ).
+This is a simple miniproject I'm doing following an Angular course ( [Angular - The Complete Guide (2021 Edition) by Maximilian Schwarzmüller](https://www.udemy.com/course/the-complete-guide-to-angular-2/) ).
 
 The miniproject looks a bit rather basic but I am doing it to refresh my Angular skills and to possibly improve and fill basic knowledge gaps I may have.
 
