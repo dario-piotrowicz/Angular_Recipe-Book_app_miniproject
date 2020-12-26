@@ -1,9 +1,8 @@
-<app-header (linkSelection)="onPseudoNavigation($event)"></app-header>
+<app-header></app-header>
 <div class="container p-4">
   <div class="row">
     <div class="col-md-12">
-      <app-recipes-panel *ngIf="currentPseudoSelection === 'recipe'"></app-recipes-panel>
-      <app-shoppig-list-panel *ngIf="currentPseudoSelection === 'shopping-list'"></app-shoppig-list-panel>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

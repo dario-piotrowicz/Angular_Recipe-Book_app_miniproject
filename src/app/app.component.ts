@@ -6,9 +6,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  public currentPseudoSelection = 'recipe';
-
-  public onPseudoNavigation(selectionName: string): void {
-    this.currentPseudoSelection = selectionName;
-  }
 }
