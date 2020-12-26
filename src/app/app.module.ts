@@ -15,6 +15,7 @@ import { ShoppingListEditorComponent } from './shoppig-list-panel/shopping-list-
 import { ShoppingListComponent } from './shoppig-list-panel/shopping-list/shopping-list.component';
 import { DropdownDirective } from './directives/dropdown.directive';
 import { NoRecipeDetailsComponent } from './recipes-panel/no-recipe-details/no-recipe-details.component';
+import { RecipeEditorComponent } from './recipes-panel/recipe-editor/recipe-editor.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { NoRecipeDetailsComponent } from './recipes-panel/no-recipe-details/no-r
     ShoppigListPanelComponent,
     ShoppingListEditorComponent,
     ShoppingListComponent,
-    DropdownDirective
+    DropdownDirective,
+    RecipeEditorComponent
   ],
   imports: [
     BrowserModule,
