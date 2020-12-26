@@ -1,1 +1,5 @@
-<p>recipe-editor works!</p>
+<h2>Recipe Editor</h2>
+<p *ngIf="editMode; else newMode">Editing the "{{ recipe.name }}" recipe</p>
+<ng-template #newMode>
+    <p>Creating a new recipe</p>
+</ng-template>
