@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 
 import { Recipe } from '../models/recipe.model';
@@ -9,10 +8,9 @@ import { Recipe } from '../models/recipe.model';
 })
 export class RecipesService {
 
-  private selectedRecipeObs = new BehaviorSubject<Recipe>(null);
-
   private _recipes: Recipe[] = [
     new Recipe(
+      'egg',
       'Egg-Thinghy',
       'Something done by mixing eggs and stuff',
       'https://images.pexels.com/photos/4099123/pexels-photo-4099123.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
@@ -23,6 +21,7 @@ export class RecipesService {
       ]
     ),
     new Recipe(
+      'yogurt',
       'Yogurt-Thingy',
       'Some type of yogurt with berries and cereals mikes in it',
       'https://images.pexels.com/photos/3872263/pexels-photo-3872263.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
@@ -40,11 +39,9 @@ export class RecipesService {
     return this._recipes.slice();
   }
 
-  public get onRecipeSelected(): Observable<Recipe> {
-    return this.selectedRecipeObs.asObservable();
+  public getRecipeById(id: string): Recipe {
+    const recipe = this._recipes.find( recipe => recipe.id === id );
+    return recipe ? {...recipe} : null;
   }
 
-  public selectRecipe(recipe: Recipe) {
-    this.selectedRecipeObs.next({...recipe});
-  }
 }
