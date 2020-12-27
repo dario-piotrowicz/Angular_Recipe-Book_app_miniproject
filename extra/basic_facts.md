@@ -52,3 +52,13 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   ```
 
   Although I find this implementation a bit ackward, I do find it quite nice as it does indeed allow us not to have to repeat our condition multiple times.
+
+- ## The @Input and @Output argument
+
+  The `@Input()` and `@Output()` decorators used in components, or more in genaral in directives, can take a string argument which will generate an alias for the property/emitter which can be referenced by outside elements.
+
+  Often we see this specified for custom directives in which you can give to an input property an alias with the same name of the directive itself, so that the directive and the property binding can be expressed more concisely as `[customDirective]="value"`.
+
+  I never thought much of it but when I was reminded of this functionality I thought that it could actually be useful sometimes, for example if a project have some strict naming conventions and you end up needing a property's named to be different between the internal class implementation and the outside's binding.
+
+  Altough I don't think this is a very frequent feature to use, I do think that it could be beneficial and generate some clean/clever code if used in the right way. So I think it's still worth remembering so that we do have this additional small tool ready in our toolbox.
