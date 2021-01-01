@@ -62,3 +62,23 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   I never thought much of it but when I was reminded of this functionality I thought that it could actually be useful sometimes, for example if a project have some strict naming conventions and you end up needing a property's named to be different between the internal class implementation and the outside's binding.
 
   Altough I don't think this is a very frequent feature to use, I do think that it could be beneficial and generate some clean/clever code if used in the right way. So I think it's still worth remembering so that we do have this additional small tool ready in our toolbox.
+
+- ## Using setters/getters for input bound properties
+
+  For input bound properties we can apply setters and getters methods, there are many different ways to use this feature, one for example is the following:
+
+  ```ts
+  private _property: any;
+
+  get property(): any {
+    return this._property;
+  }
+
+  @Input() set property(value: any) {
+    // ... additional code can go here
+    this._property = value; // you can even process/check the value here
+    // ... additional code can go here
+  }
+  ```
+
+  I was not aware of this and would handle the data in a different way, like processing it using `ngOnChanges` or similar solutions. But using setters/getters in such a way seems to me like a much more elegant and efficient solution, which allows us to process the data as soon as it is bound to the component/directive in a clean and direct way, side effect code related to the value can also additionaly be applied (this can help avoid unnecessary subscriptions/checks).
