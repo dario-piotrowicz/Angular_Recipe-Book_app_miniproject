@@ -82,3 +82,25 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   ```
 
   I was not aware of this and would handle the data in a different way, like processing it using `ngOnChanges` or similar solutions. But using setters/getters in such a way seems to me like a much more elegant and efficient solution, which allows us to process the data as soon as it is bound to the component/directive in a clean and direct way, side effect code related to the value can also additionaly be applied (this can help avoid unnecessary subscriptions/checks).
+
+- ## ViewEncapsulation
+
+  When you write components in Angular one thing that is a well know fact and which is actually a very nice feature of the framework is the fact that the css applied to a component doesn't effect the other components in the same applicaton, not even if the css styles some basic element such as `h1` or `p`.
+
+  Angular does that by adding to taking the component, applying to each of its html elements a specific and unique attribute and extending the css selectors to use that attribute. In this way the framework manages to isolate the css of each component.
+
+  What may be less known is that this is just the default behaviour, and there are two other options, this behaviour can be modified on the component level by specifying an option the @Component decorator as follows:
+
+  ```ts
+    @Component({
+    ...,
+    encapsulation: ViewEncapsulation.X
+    })
+    class MyComponent {}
+  ```
+
+  where `X` is either `Emulated` (the default), `None` or `ShadowDom`, in details:
+
+  - `Emulated` simply implements the default behaviour of adding the extra attribute to the elements and the css
+  - `None` turns off the behaviour, reverting to the standard css behaviour in which css files are all merged into one and rules can override each other (this is undesirable, expecially considering the fact that we cannot clearly know in which order the css files are bundled, but there can indeed be instances in which this may come in handy)
+  - `ShadowDom` implements the behaviour by using the browser's Shadow Dom which is an advanced feature which basically allows to implement the css isolation in a more web-standard / browser-native manner. This feature (as of yet) is however not widely supported by browsers and thus should be used with caution possibly alongside a polyfill libary.
