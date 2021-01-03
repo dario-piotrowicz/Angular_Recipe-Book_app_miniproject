@@ -104,3 +104,29 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   - `Emulated` simply implements the default behaviour of adding the extra attribute to the elements and the css
   - `None` turns off the behaviour, reverting to the standard css behaviour in which css files are all merged into one and rules can override each other (this is undesirable, expecially considering the fact that we cannot clearly know in which order the css files are bundled, but there can indeed be instances in which this may come in handy)
   - `ShadowDom` implements the behaviour by using the browser's Shadow Dom which is an advanced feature which basically allows to implement the css isolation in a more web-standard / browser-native manner. This feature (as of yet) is however not widely supported by browsers and thus should be used with caution possibly alongside a polyfill libary.
+
+- ## providedIn
+
+  When you create a new service using the Angular CLI by default the following decoration gets applied to the newly created class:
+
+  ```ts
+    @Injectable({
+      providedIn: 'root'
+    })
+  ```
+
+  What I used to do was to keep the `providedIn` option only if the service needs to be in the root module, otherwise I would remove it and add the newly created service to the providers option of the module it was supposed to be provided in.
+
+  It turns out however that the `providedIn`'s argument can also be any module in your application, and you can simply specify that as follows:
+
+  ```ts
+  import { AnythingModule } from '.../anything.module';
+
+  @Injectable({
+    providedIn: AnythingModule
+  })
+  ```
+
+  Not only this is a viable alternative but it's actually the recommended way to provide services in modules, as this allows Angular to tree-shake the services not actually used in the application/module (you can read more about it [here](https://angular.io/guide/hierarchical-dependency-injection#tree-shaking-and-injectable)).
+
+  Additionally, a new value you can assign to the `providedIn` field **since Angular 9** is the `'any'` string, this basically creates a shared singleton instance of the service for all eagerly loaded modules and unique instances for eahc lazy loaded one (you can read more about it [ here](https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules)).
