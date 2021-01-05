@@ -130,3 +130,48 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   Not only this is a viable alternative but it's actually the recommended way to provide services in modules, as this allows Angular to tree-shake the services not actually used in the application/module (you can read more about it [here](https://angular.io/guide/hierarchical-dependency-injection#tree-shaking-and-injectable)).
 
   Additionally, a new value you can assign to the `providedIn` field **since Angular 9** is the `'any'` string, this basically creates a shared singleton instance of the service for all eagerly loaded modules and unique instances for eahc lazy loaded one (you can read more about it [ here](https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules)).
+
+- ## Content Projection
+
+  You can use the `ng-content` directive to project some content into your component but that leads to some possible questions...
+
+  Before continuing, here's a bonus fact I did not know about, there's a `select` option which allows you to specify/select different contents to project as for example in:
+
+  ```html
+  <!-- my-component.component.html -->
+  <div class="my-component">
+    <header class="my-component-header">
+      <ng-content select="[header-content]"></ng-content>
+    </header>
+    <main class="my-component-main">
+      <ng-content select="[main-content]"></ng-content>
+    </main>
+    <footer class="my-component-footer">
+      <ng-content select="[footer-content]"></ng-content>
+    </footer>
+  </div>
+  ```
+
+  ```html
+  <!-- app.component.html -->
+  <my-component>
+    <h2 header-content>Header</h2>
+    <div main-content><p>Main</p></div>
+    <p footer-content>Footer</p>
+  </my-component>
+  ```
+
+  )
+
+  Anyways, the questions content projection can lead to are related to who owns/controls the elements inside of it, if for example I project component A inside component B and B has an `*ngIf` dictating if the `ng-content` needs to be present, will the component A's `ngOnInit` be triggered each time the `ng-content` appears?
+
+  The answer is no, since all that `ng-content` does is actually _projecting_ content, it's not creating or owning it.
+
+  Another possible question is if I apply an `*ngFor` to a wrapper of the `ng-content` will that create more instances of A?
+
+  Again, the answer is no, we would just end up showing more views of the same exact instance of A.
+
+  I think there are too many facets/implication to describe here, but what I just wanted to point out is that when you use some `ng-content` understand that it is practically taking some `content` (you can imagine it being in another part of the page) and showing/_projecting_ it. Bascially treat it as it were a _link_/_reference_ to some view and think of what implications that can have to your current implementation. Do not treat the content as it were part the component you're injecting it to because that is just wrong and can lead to unexpected behaviours.
+
+  For more details check this very nice NgConf presentation by Eudes Petonnet:
+  [Deep dive into content projection](https://youtu.be/PTwKhxLZ3jI).
