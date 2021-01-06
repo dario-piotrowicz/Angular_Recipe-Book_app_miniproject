@@ -10,6 +10,7 @@
             name="name"
             class="form-control"
             ngModel
+            required
           />
         </div>
         <div class="col-sm-2 form-group">
@@ -20,12 +21,20 @@
             name="amount"
             class="form-control"
             ngModel
+            required
+            pattern="^[1-9]+[0-9]*$"
           />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <button class="btn btn-success m-1" type="submit">Add</button>
+          <button
+            class="btn btn-success m-1"
+            type="submit"
+            [disabled]="form.invalid"
+          >
+            Add
+          </button>
           <button class="btn btn-danger m-1" type="button">Delete</button>
           <button class="btn btn-primary m-1" type="button">Clear</button>
         </div>
