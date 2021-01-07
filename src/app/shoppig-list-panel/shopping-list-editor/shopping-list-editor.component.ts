@@ -34,8 +34,11 @@ export class ShoppingListEditorComponent implements OnInit, OnDestroy {
     this.itemSelectedSubscription.unsubscribe();
   }
 
-  public addOrEditIngredient(form: NgForm): void {
-    const newIngredient = new Ingredient(form.value.name, form.value.amount);
+  public addOrEditIngredient(): void {
+    const newIngredient = new Ingredient(
+      this.form.value.name,
+      this.form.value.amount
+    );
     if (this.indexSelectedForEditing < 0) {
       this.shoppingListService.addItemsToIngredientsList([newIngredient]);
     } else {
@@ -44,7 +47,11 @@ export class ShoppingListEditorComponent implements OnInit, OnDestroy {
         newIngredient
       );
     }
-    form.reset();
+    this.clearForm();
+  }
+
+  public clearForm(): void {
+    this.form.reset();
     this.indexSelectedForEditing = -1;
   }
 }
