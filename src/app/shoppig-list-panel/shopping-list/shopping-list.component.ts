@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Ingredient } from '../../models/ingredient.model';
 
 @Component({
@@ -8,4 +9,10 @@ import { Ingredient } from '../../models/ingredient.model';
 })
 export class ShoppingListComponent {
   @Input() list: Ingredient[] = [];
+
+  constructor(private shoppingListService: ShoppingListService) {}
+
+  public onEditItem(index: number): void {
+    this.shoppingListService.publishIngredientItemSelectedForEditing(index);
+  }
 }

@@ -1,6 +1,7 @@
 <ul class="list-group">
   <a
-    *ngFor="let ingredient of list"
+    *ngFor="let ingredient of list; let idx = index"
+    (click)="onEditItem(idx)"
     class="list-group-item list-group-item-action"
   >
     {{ ingredient.name }} ({{ ingredient.amount }})
