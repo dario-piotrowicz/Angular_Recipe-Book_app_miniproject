@@ -51,18 +51,40 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="false">
-        <div class="col-12">
+      <div class="row">
+        <div class="col-12" formArrayName="ingredients">
           <label>Ingredients</label>
-          <div class="row">
+          <div
+            class="row m-2"
+            *ngFor="
+              let ingredient of ingredientsFormArray.controls;
+              let idx = index
+            "
+            [formGroupName]="idx"
+          >
             <div class="col-8">
-              <input type="text" class="form-control" />
+              <input type="text" class="form-control" formControlName="name" />
             </div>
             <div class="col-2">
-              <input type="number" class="form-control" />
+              <input
+                type="number"
+                class="form-control"
+                formControlName="amount"
+              />
             </div>
             <div class="col-2">
-              <button class="btn btn-danger">&times;</button>
+              <button type="button" class="btn btn-danger">&times;</button>
+            </div>
+          </div>
+          <div class="row m-2">
+            <div class="col-2 offset-10">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="addIngredientFormGroup()"
+              >
+                +
+              </button>
             </div>
           </div>
         </div>

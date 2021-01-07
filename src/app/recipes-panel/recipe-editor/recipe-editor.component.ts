@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
 
 import { RecipesService } from 'src/app/services/recipes.service';
@@ -15,6 +16,7 @@ export class RecipeEditorComponent implements OnInit {
   public editMode = false;
 
   public form: FormGroup;
+  public ingredientsFormArray: FormArray;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +40,14 @@ export class RecipeEditorComponent implements OnInit {
     console.log({ form: this.form });
   }
 
+  public addIngredientFormGroup(ingredient?: Ingredient): void {
+    const ingredientFormGroup = new FormGroup({
+      name: new FormControl(ingredient ? ingredient.name : null),
+      amount: new FormControl(ingredient ? ingredient.amount : null),
+    });
+    this.ingredientsFormArray.push(ingredientFormGroup);
+  }
+
   private initForm(): void {
     const correctlyInEditMode = this.editMode && this.recipe;
 
@@ -47,10 +57,18 @@ export class RecipeEditorComponent implements OnInit {
       ? this.recipe.description
       : '';
 
+    this.ingredientsFormArray = new FormArray([]);
+    if (correctlyInEditMode && this.recipe.ingredients) {
+      this.recipe.ingredients.forEach((ingredient) =>
+        this.addIngredientFormGroup(ingredient)
+      );
+    }
+
     this.form = new FormGroup({
       name: new FormControl(initRecipeName),
       imageUrl: new FormControl(initRecipeImageUrl),
       description: new FormControl(initRecipeDescription),
+      ingredients: this.ingredientsFormArray,
     });
   }
 }
