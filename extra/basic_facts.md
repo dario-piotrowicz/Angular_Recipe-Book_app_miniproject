@@ -129,7 +129,13 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
 
   Not only this is a viable alternative but it's actually the recommended way to provide services in modules, as this allows Angular to tree-shake the services not actually used in the application/module (you can read more about it [here](https://angular.io/guide/hierarchical-dependency-injection#tree-shaking-and-injectable)).
 
-  Additionally, a new value you can assign to the `providedIn` field **since Angular 9** is the `'any'` string, this basically creates a shared singleton instance of the service for all eagerly loaded modules and unique instances for eahc lazy loaded one (you can read more about it [ here](https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules)).
+  Additionally, a two new values for the `providedIn` field have been added in **Angular 9**:
+
+  - `'any'`, this basically creates a shared singleton instance of the service for all eagerly loaded modules and unique instances for each lazy loaded one
+
+  - `'platform'`, this create a singleton shared by all applications on the page. Basically if you have multiuple Angular apps in the same page this allows you to share a singleton instance of that service among them, whilst for standard stand-alone applications the result is identical to `'root'`
+
+  You can read more about this new values in the [official documentation](https://angular.io/guide/providers#limiting-provider-scope-by-lazy-loading-modules) or in the [Improved Dependency Injection with the new providedIn scopes 'any' and 'platform'](https://dev.to/christiankohler/improved-dependeny-injection-with-the-new-providedin-scopes-any-and-platform-30bb) Dev blog post.
 
 - ## Content Projection
 
