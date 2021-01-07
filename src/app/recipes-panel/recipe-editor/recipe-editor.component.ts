@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
@@ -42,8 +42,14 @@ export class RecipeEditorComponent implements OnInit {
 
   public addIngredientFormGroup(ingredient?: Ingredient): void {
     const ingredientFormGroup = new FormGroup({
-      name: new FormControl(ingredient ? ingredient.name : null),
-      amount: new FormControl(ingredient ? ingredient.amount : null),
+      name: new FormControl(
+        ingredient ? ingredient.name : null,
+        Validators.required
+      ),
+      amount: new FormControl(ingredient ? ingredient.amount : null, [
+        Validators.required,
+        Validators.pattern('[1-9]+[0-9]*'),
+      ]),
     });
     this.ingredientsFormArray.push(ingredientFormGroup);
   }
@@ -65,9 +71,9 @@ export class RecipeEditorComponent implements OnInit {
     }
 
     this.form = new FormGroup({
-      name: new FormControl(initRecipeName),
-      imageUrl: new FormControl(initRecipeImageUrl),
-      description: new FormControl(initRecipeDescription),
+      name: new FormControl(initRecipeName, Validators.required),
+      imageUrl: new FormControl(initRecipeImageUrl, Validators.required),
+      description: new FormControl(initRecipeDescription, Validators.required),
       ingredients: this.ingredientsFormArray,
     });
   }
