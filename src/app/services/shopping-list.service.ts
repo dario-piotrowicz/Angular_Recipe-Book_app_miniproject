@@ -53,4 +53,11 @@ export class ShoppingListService {
       this._ingredientsListChanged.next();
     }
   }
+
+  public deletetIngredientAt(index: number): void {
+    if (index >= 0 || index < this._ingredientsList.length) {
+      this._ingredientsList.splice(index, 1);
+      this._ingredientsListChanged.next();
+    }
+  }
 }
