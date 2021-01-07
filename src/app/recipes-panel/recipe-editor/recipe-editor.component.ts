@@ -34,6 +34,10 @@ export class RecipeEditorComponent implements OnInit {
     });
   }
 
+  public onFormSubmit(): void {
+    console.log({ form: this.form });
+  }
+
   private initForm(): void {
     const correctlyInEditMode = this.editMode && this.recipe;
 
