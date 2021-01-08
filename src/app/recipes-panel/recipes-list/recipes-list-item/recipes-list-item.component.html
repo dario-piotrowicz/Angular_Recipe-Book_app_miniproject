@@ -1,17 +1,11 @@
 <a
-[routerLink]="[recipe.id]"
-routerLinkActive="active"
-class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+  [routerLink]="[recipe.id]"
+  routerLinkActive="active"
+  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
 >
-<div>
-  <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
-  <p class="list-group-item-text">{{ recipe.description }}</p>
-</div>
-<div>
-  <img
-    [src]="recipe.imageUrl"
-    [alt]="recipe.name"
-    class="img-responsive"
-  />
-</div>
+  <div>
+    <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
+    <p class="list-group-item-text">{{ recipe.description }}</p>
+  </div>
+  <img [src]="recipe.imageUrl" [alt]="recipe.name" class="img-responsive" />
 </a>
