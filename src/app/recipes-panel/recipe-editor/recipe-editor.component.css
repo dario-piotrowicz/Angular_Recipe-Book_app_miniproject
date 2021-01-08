@@ -2,3 +2,7 @@ input.ng-invalid:not(.ng-pristine),
 textarea.ng-invalid:not(.ng-pristine) {
   border: 1px solid red;
 }
+
+img.img-responsive {
+  width: 100%;
+}
