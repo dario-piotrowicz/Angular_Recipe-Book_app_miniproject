@@ -64,4 +64,14 @@ export class RecipesService {
       this._recipesListChanged.next();
     }
   }
+
+  public deleteRecipe(recipeId: string): void {
+    const recipeIdx = this._recipes.findIndex(
+      (recipe) => recipe.id === recipeId
+    );
+    if (recipeIdx >= 0) {
+      this._recipes.splice(recipeIdx, 1);
+      this._recipesListChanged.next();
+    }
+  }
 }
