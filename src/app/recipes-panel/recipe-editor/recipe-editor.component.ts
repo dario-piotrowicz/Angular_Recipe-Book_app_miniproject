@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
 
@@ -20,6 +20,7 @@ export class RecipeEditorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private recipesService: RecipesService
   ) {}
 
@@ -51,6 +52,7 @@ export class RecipeEditorComponent implements OnInit {
       newOrUpdatedRecipe.id = this.generateRandomRecipeId();
       this.recipesService.addRecipe(newOrUpdatedRecipe);
     }
+    this.navigateToBaseRecipesPanel();
   }
 
   public addIngredientFormGroup(ingredient?: Ingredient): void {
@@ -65,6 +67,10 @@ export class RecipeEditorComponent implements OnInit {
       ]),
     });
     this.ingredientsFormArray.push(ingredientFormGroup);
+  }
+
+  public navigateToBaseRecipesPanel(): void {
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private initForm(): void {
