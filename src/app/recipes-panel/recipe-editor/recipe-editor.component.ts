@@ -37,7 +37,20 @@ export class RecipeEditorComponent implements OnInit {
   }
 
   public onFormSubmit(): void {
-    console.log({ form: this.form });
+    const newOrUpdatedRecipe = new Recipe(
+      null,
+      this.form.value.name,
+      this.form.value.description,
+      this.form.value.imageUrl,
+      this.form.value.ingredients
+    );
+    if (this.editMode) {
+      newOrUpdatedRecipe.id = this.recipe.id;
+      this.recipesService.updateRecipe(this.recipe.id, newOrUpdatedRecipe);
+    } else {
+      newOrUpdatedRecipe.id = this.generateRandomRecipeId();
+      this.recipesService.addRecipe(newOrUpdatedRecipe);
+    }
   }
 
   public addIngredientFormGroup(ingredient?: Ingredient): void {
@@ -76,5 +89,16 @@ export class RecipeEditorComponent implements OnInit {
       description: new FormControl(initRecipeDescription, Validators.required),
       ingredients: this.ingredientsFormArray,
     });
+  }
+
+  private generateRandomRecipeId(): string {
+    var result = '';
+    var characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < 10; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return `recipe-${result}`;
   }
 }

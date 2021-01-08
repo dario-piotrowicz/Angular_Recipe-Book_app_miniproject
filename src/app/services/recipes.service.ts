@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 
 import { Recipe } from '../models/recipe.model';
@@ -7,6 +8,8 @@ import { Recipe } from '../models/recipe.model';
   providedIn: 'root',
 })
 export class RecipesService {
+  private _recipesListChanged = new Subject<void>();
+
   private _recipes: Recipe[] = [
     new Recipe(
       'egg',
@@ -41,5 +44,24 @@ export class RecipesService {
   public getRecipeById(id: string): Recipe {
     const recipe = this._recipes.find((recipe) => recipe.id === id);
     return recipe ? { ...recipe } : null;
+  }
+
+  public get onRecipesListChanged(): Observable<void> {
+    return this._recipesListChanged.asObservable();
+  }
+
+  public addRecipe(recipe: Recipe): void {
+    this._recipes.push({ ...recipe });
+    this._recipesListChanged.next();
+  }
+
+  public updateRecipe(recipeId: string, recipe: Recipe): void {
+    const recipeIdx = this._recipes.findIndex(
+      (recipe) => recipe.id === recipeId
+    );
+    if (recipeIdx >= 0) {
+      this._recipes[recipeIdx] = { ...recipe };
+      this._recipesListChanged.next();
+    }
   }
 }
