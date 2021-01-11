@@ -30,8 +30,10 @@
             >Manage <span class="caret"></span
           ></a>
           <ul class="dropdown-menu">
-            <li><a class="m-2">Save Data</a></li>
-            <li><a class="m-2">Fetch Data</a></li>
+            <li><a class="m-2" (click)="onSaveDataHandler()">Save Data</a></li>
+            <li>
+              <a class="m-2" (click)="onFatchDataHandler()">Fetch Data</a>
+            </li>
           </ul>
         </li>
       </ul>

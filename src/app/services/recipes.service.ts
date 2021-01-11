@@ -41,6 +41,11 @@ export class RecipesService {
     return this._recipes.slice();
   }
 
+  public set recipes(recipes: Recipe[]) {
+    this._recipes = recipes.slice();
+    this._recipesListChanged.next();
+  }
+
   public getRecipeById(id: string): Recipe {
     const recipe = this._recipes.find((recipe) => recipe.id === id);
     return recipe ? { ...recipe } : null;
