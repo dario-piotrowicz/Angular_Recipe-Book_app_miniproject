@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { map } from 'rxjs/operators';
+
 import { RecipesService } from './recipes.service';
 import { Recipe } from '../models/recipe.model';
 
@@ -24,8 +26,18 @@ export class DataNetworkService {
   }
 
   public loadRecipes(): void {
-    this.http.get<Recipe[]>(this.firebaseRecipesUrl).subscribe((recipes) => {
-      this.recipesService.recipes = recipes;
-    });
+    this.http
+      .get<Recipe[]>(this.firebaseRecipesUrl)
+      .pipe(
+        map((recipes) =>
+          recipes.map((recipe) => ({
+            ...recipe,
+            ingredients: recipe.ingredients || [],
+          }))
+        )
+      )
+      .subscribe((recipes) => {
+        this.recipesService.recipes = recipes;
+      });
   }
 }
