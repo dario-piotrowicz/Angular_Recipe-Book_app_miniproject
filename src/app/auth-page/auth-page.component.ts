@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-auth-page',
@@ -10,18 +11,19 @@ export class AuthPageComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onSubmitHandler(submitterName: string) {
+  onSubmitHandler(submitterName: string, form: NgForm) {
     if (submitterName === 'sign-in') {
-      this.handleSignIn();
+      this.handleSignIn(form);
     } else {
-      this.handleSignUp();
+      this.handleSignUp(form);
     }
+    form.reset();
   }
 
-  private handleSignIn() {
-    console.log('sign in!');
+  private handleSignIn(form: NgForm) {
+    console.log('sign in!', { form });
   }
-  private handleSignUp() {
-    console.log('sign up!');
+  private handleSignUp(form: NgForm) {
+    console.log('sign up!', { form });
   }
 }
