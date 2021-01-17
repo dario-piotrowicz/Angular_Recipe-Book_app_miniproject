@@ -8,6 +8,7 @@ import { RecipesPanelComponent } from './recipes-panel/recipes-panel.component';
 import { ShoppigListPanelComponent } from './shoppig-list-panel/shoppig-list-panel.component';
 
 import { AvailableRecipeGuard } from './guards/available-recipe.guard';
+import { AuthPageComponent } from './auth-page/auth-page.component';
 
 const appRoutes: Routes = [
   {
@@ -42,6 +43,10 @@ const appRoutes: Routes = [
   {
     path: 'shopping-list',
     component: ShoppigListPanelComponent,
+  },
+  {
+    path: 'auth',
+    component: AuthPageComponent,
   },
 ];
 

@@ -1,0 +1,22 @@
+<div class="row mt-5">
+  <div class="col-md-6 offset-md-3 col-12">
+    <form (ngSubmit)="onSubmitHandler($event.submitter.name)">
+      <div class="form-group">
+        <label for="email" class="font-weight-bold"> Email </label>
+        <input type="email" class="form-control" id="email" />
+      </div>
+      <div class="form-group">
+        <label for="password" class="font-weight-bold"> Password </label>
+        <input type="password" class="form-control" id="password" />
+      </div>
+      <div class="mt-5">
+        <button class="btn btn-primary mr-2" type="submit" name="sign-in">
+          Sign In
+        </button>
+        <button class="btn btn-primary" type="submit" name="sign-up">
+          Sign Up
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
