@@ -29,20 +29,7 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(
-        catchError(({ error }) => {
-          let errorMessage = 'An Error has occurred';
-          if (error && error.error && error.error.message) {
-            const firebaseErrorMessage = error.error.message;
-            switch (firebaseErrorMessage) {
-              case 'EMAIL_EXISTS':
-                errorMessage = 'This email already exists';
-                break;
-            }
-          }
-          return throwError(errorMessage);
-        })
-      );
+      .pipe(this.handleAuthSignInOrSignUpError);
   }
 
   public signIn(
@@ -58,19 +45,31 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(
-        catchError(({ error }) => {
-          let errorMessage = 'An Error has occurred';
-          if (error && error.error && error.error.message) {
-            const firebaseErrorMessage = error.error.message;
-            switch (firebaseErrorMessage) {
-              case 'EMAIL_EXISTS':
-                errorMessage = 'This email already exists';
-                break;
-            }
+      .pipe(this.handleAuthSignInOrSignUpError);
+  }
+
+  private handleAuthSignInOrSignUpError<T>(
+    source: Observable<T>
+  ): Observable<T> {
+    return source.pipe(
+      catchError(({ error }) => {
+        let errorMessage = 'An Error has occurred';
+        if (error && error.error && error.error.message) {
+          const firebaseErrorMessage = error.error.message;
+          switch (firebaseErrorMessage) {
+            case 'EMAIL_EXISTS':
+              errorMessage = 'This email already exists';
+              break;
+            case 'EMAIL_NOT_FOUND':
+              errorMessage = 'This email does not exist';
+              break;
+            case 'INVALID_PASSWORD':
+              errorMessage = 'The provided password is incorrect';
+              break;
           }
-          return throwError(errorMessage);
-        })
-      );
+        }
+        return throwError(errorMessage);
+      })
+    );
   }
 }
