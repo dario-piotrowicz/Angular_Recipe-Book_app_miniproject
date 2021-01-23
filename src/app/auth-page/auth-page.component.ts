@@ -3,11 +3,11 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { AuthService } from '../services/auth.service';
 import {
-  AuthService,
   AuthSignInResponse,
   AuthSignUpResponse,
-} from '../services/auth.service';
+} from '../models/auth-response.model';
 
 @Component({
   selector: 'app-auth-page',

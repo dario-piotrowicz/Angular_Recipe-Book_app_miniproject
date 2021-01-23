@@ -3,17 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-export interface AuthSignUpResponse {
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-}
-
-export interface AuthSignInResponse extends AuthSignUpResponse {
-  registered: boolean;
-}
+import {
+  AuthSignInResponse,
+  AuthSignUpResponse,
+} from '../models/auth-response.model';
 
 @Injectable({
   providedIn: 'root',
