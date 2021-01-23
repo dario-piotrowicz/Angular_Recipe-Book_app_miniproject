@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthPageComponent implements OnInit {
   public loading = false;
+  public errorMessage: string = null;
 
   constructor(private authService: AuthService) {}
 
@@ -41,8 +42,8 @@ export class AuthPageComponent implements OnInit {
         (response) => {
           console.log({ response });
         },
-        (error) => {
-          console.log({ error });
+        (errorMessage) => {
+          this.errorMessage = errorMessage;
         }
       );
   }
