@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { AuthService } from '../services/auth.service';
+import {
+  AuthService,
+  AuthSignInResponse,
+  AuthSignUpResponse,
+} from '../services/auth.service';
 
 @Component({
   selector: 'app-auth-page',
@@ -22,29 +27,34 @@ export class AuthPageComponent implements OnInit {
 
     this.loading = true;
     const { email, password } = form.value;
+    form.reset();
     if (submitterName === 'sign-in') {
-      this.handleSignIn(form);
+      this.handleSignIn(email, password);
     } else {
       this.handleSignUp(email, password);
     }
-    form.reset();
   }
 
-  private handleSignIn(form: NgForm) {
-    console.log('sign in!', { form });
+  private handleSignIn(email: string, password: string): void {
+    const requestObs = this.authService.signIn(email, password);
+    this.handleSignInOrSignUpServiceRequest(requestObs);
   }
 
   private handleSignUp(email: string, password: string): void {
-    this.authService
-      .signUp(email, password)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe(
-        (response) => {
-          console.log({ response });
-        },
-        (errorMessage) => {
-          this.errorMessage = errorMessage;
-        }
-      );
+    const requestObs = this.authService.signUp(email, password);
+    this.handleSignInOrSignUpServiceRequest(requestObs);
+  }
+
+  private handleSignInOrSignUpServiceRequest(
+    requestObs: Observable<AuthSignUpResponse | AuthSignInResponse>
+  ): void {
+    requestObs.pipe(finalize(() => (this.loading = false))).subscribe(
+      (response) => {
+        console.log({ response });
+      },
+      (errorMessage) => {
+        this.errorMessage = errorMessage;
+      }
+    );
   }
 }
