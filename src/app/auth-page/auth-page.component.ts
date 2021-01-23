@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
 
@@ -9,6 +10,8 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./auth-page.component.css'],
 })
 export class AuthPageComponent implements OnInit {
+  public loading = false;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {}
@@ -16,6 +19,7 @@ export class AuthPageComponent implements OnInit {
   onSubmitHandler(submitterName: string, form: NgForm) {
     if (form.invalid) return;
 
+    this.loading = true;
     const { email, password } = form.value;
     if (submitterName === 'sign-in') {
       this.handleSignIn(form);
@@ -30,13 +34,16 @@ export class AuthPageComponent implements OnInit {
   }
 
   private handleSignUp(email: string, password: string): void {
-    this.authService.signUp(email, password).subscribe(
-      (response) => {
-        console.log({ response });
-      },
-      (error) => {
-        console.log({ error });
-      }
-    );
+    this.authService
+      .signUp(email, password)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(
+        (response) => {
+          console.log({ response });
+        },
+        (error) => {
+          console.log({ error });
+        }
+      );
   }
 }
