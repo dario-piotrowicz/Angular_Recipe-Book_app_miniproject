@@ -56,6 +56,10 @@ export class AuthService {
       .pipe(this.handleAuthSignInOrSignUpError, this.saveAuthenticatedUser);
   }
 
+  public logOut(): void {
+    this._authenticatedUser.next(null);
+  }
+
   private handleAuthSignInOrSignUpError<T>(
     source: Observable<T>
   ): Observable<T> {

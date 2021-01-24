@@ -36,4 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public onFatchDataHandler(): void {
     this.dataNetworkService.loadRecipes();
   }
+
+  public onLogOutHandler(): void {
+    this.authService.logOut();
+  }
 }
