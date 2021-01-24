@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import {
   AuthSignInResponse,
   AuthSignUpResponse,
 } from '../models/auth-response.model';
 
+import { User } from '../models/user.model';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
+
+  private _authenticatedUser: User = null;
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +33,7 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(this.handleAuthSignInOrSignUpError);
+      .pipe(this.handleAuthSignInOrSignUpError, this.saveAuthenticatedUser);
   }
 
   public signIn(
@@ -45,7 +49,7 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(this.handleAuthSignInOrSignUpError);
+      .pipe(this.handleAuthSignInOrSignUpError, this.saveAuthenticatedUser);
   }
 
   private handleAuthSignInOrSignUpError<T>(
@@ -68,7 +72,26 @@ export class AuthService {
               break;
           }
         }
+        this._authenticatedUser = null;
         return throwError(errorMessage);
+      })
+    );
+  }
+
+  private saveAuthenticatedUser<
+    T extends AuthSignInResponse | AuthSignUpResponse
+  >(source: Observable<T>): Observable<T> {
+    return source.pipe(
+      tap((response) => {
+        const { localId: id, email, idToken: token, expiresIn } = response;
+
+        const currentTimeInMillis = new Date().getTime();
+        const expiredInInMillis = parseInt(expiresIn) * 1000;
+        const expirationDate = new Date(
+          currentTimeInMillis + expiredInInMillis
+        );
+
+        this._authenticatedUser = new User(id, email, token, expirationDate);
       })
     );
   }
