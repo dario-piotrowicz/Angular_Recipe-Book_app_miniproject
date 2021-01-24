@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subscription,
+  throwError,
+  timer,
+} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import {
@@ -18,6 +24,8 @@ export class AuthService {
   private readonly localStorageUserKey = 'recipeBookAppUserData';
 
   private _authenticatedUser = new BehaviorSubject<User>(null);
+
+  private expirationTimerSubscription: Subscription = null;
 
   public get authenticatedUser(): Observable<User> {
     return this._authenticatedUser.asObservable();
@@ -60,6 +68,10 @@ export class AuthService {
   public logOut(): void {
     this._authenticatedUser.next(null);
     localStorage.removeItem(this.localStorageUserKey);
+    if (this.expirationTimerSubscription) {
+      this.expirationTimerSubscription.unsubscribe();
+      this.expirationTimerSubscription = null;
+    }
   }
 
   public retrieveUserDataFromLocalStorage(): void {
@@ -73,13 +85,19 @@ export class AuthService {
       localStorageUserData._authToken &&
       localStorageUserData._authTokenExpirationDate
     ) {
+      const tokenExpirationDate = new Date(
+        localStorageUserData._authTokenExpirationDate
+      );
       const userFromLocalStorage = new User(
         localStorageUserData.id,
         localStorageUserData.email,
         localStorageUserData._authToken,
-        new Date(localStorageUserData._authTokenExpirationDate)
+        tokenExpirationDate
       );
       this._authenticatedUser.next(userFromLocalStorage);
+      const expiresInInMillis =
+        tokenExpirationDate.getTime() - new Date().getTime();
+      this.setExpirationTimer(expiresInInMillis);
     }
   }
 
@@ -119,9 +137,9 @@ export class AuthService {
         const { localId: id, email, idToken: token, expiresIn } = response;
 
         const currentTimeInMillis = new Date().getTime();
-        const expiredInInMillis = parseInt(expiresIn) * 1000;
+        const expiresInInMillis = parseInt(expiresIn) * 1000;
         const expirationDate = new Date(
-          currentTimeInMillis + expiredInInMillis
+          currentTimeInMillis + expiresInInMillis
         );
 
         this._authenticatedUser.next(
@@ -131,7 +149,17 @@ export class AuthService {
           this.localStorageUserKey,
           JSON.stringify(this._authenticatedUser.value)
         );
+        this.setExpirationTimer(expiresInInMillis);
       })
     );
   };
+
+  private setExpirationTimer(millsecondsToExpiration: number): void {
+    if (this.expirationTimerSubscription) {
+      this.expirationTimerSubscription.unsubscribe();
+    }
+    this.expirationTimerSubscription = timer(
+      millsecondsToExpiration
+    ).subscribe(() => this.logOut());
+  }
 }
