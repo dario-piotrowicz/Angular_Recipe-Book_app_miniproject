@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import {
@@ -16,7 +16,11 @@ import { User } from '../models/user.model';
 export class AuthService {
   private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
 
-  private _authenticatedUser: User = null;
+  private _authenticatedUser = new BehaviorSubject<User>(null);
+
+  public get authenticatedUser(): Observable<User> {
+    return this._authenticatedUser.asObservable();
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -72,7 +76,7 @@ export class AuthService {
               break;
           }
         }
-        this._authenticatedUser = null;
+        this._authenticatedUser.next(null);
         return throwError(errorMessage);
       })
     );
@@ -93,7 +97,9 @@ export class AuthService {
           currentTimeInMillis + expiredInInMillis
         );
 
-        this._authenticatedUser = new User(id, email, token, expirationDate);
+        this._authenticatedUser.next(
+          new User(id, email, token, expirationDate)
+        );
       })
     );
   };
