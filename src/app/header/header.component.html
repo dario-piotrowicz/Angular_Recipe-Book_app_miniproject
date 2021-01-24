@@ -23,12 +23,15 @@
         <li routerLinkActive="active">
           <a class="nav-link" routerLink="/shopping-list">Shopping List</a>
         </li>
-        <li routerLinkActive="active">
+        <li routerLinkActive="active" *ngIf="!userIsAuthenticated">
           <a class="nav-link" routerLink="/auth">Authenticate</a>
         </li>
       </ul>
       <ul class="navbar-nav navbar-right">
-        <li class="dropdown" appDropdown>
+        <li *ngIf="userIsAuthenticated">
+          <a class="nav-link">Log Out</a>
+        </li>
+        <li *ngIf="userIsAuthenticated" class="dropdown" appDropdown>
           <a class="nav-link dropdown-toggle" role="button"
             >Manage <span class="caret"></span
           ></a>
