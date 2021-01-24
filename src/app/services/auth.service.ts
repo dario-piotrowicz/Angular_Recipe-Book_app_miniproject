@@ -71,13 +71,13 @@ export class AuthService {
       localStorageUserData.id &&
       localStorageUserData.email &&
       localStorageUserData._authToken &&
-      localStorageUserData._authTokenExpirationData
+      localStorageUserData._authTokenExpirationDate
     ) {
       const userFromLocalStorage = new User(
         localStorageUserData.id,
         localStorageUserData.email,
         localStorageUserData._authToken,
-        new Date(localStorageUserData._authTokenExpirationData)
+        new Date(localStorageUserData._authTokenExpirationDate)
       );
       this._authenticatedUser.next(userFromLocalStorage);
     }

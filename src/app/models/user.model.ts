@@ -3,15 +3,15 @@ export class User {
     public id: string,
     public email: string,
     private _authToken: string,
-    private _authTokenExpirationData: Date
+    private _authTokenExpirationDate: Date
   ) {}
 
   get authToken(): string {
     if (
-      !this._authTokenExpirationData ||
-      new Date() > this._authTokenExpirationData
+      !this._authTokenExpirationDate ||
+      new Date() > this._authTokenExpirationDate
     ) {
-      this._authTokenExpirationData = null;
+      this._authTokenExpirationDate = null;
       this._authToken = null;
     }
     return this._authToken;
