@@ -15,6 +15,7 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
+  private readonly localStorageUserKey = 'recipeBookAppUserData';
 
   private _authenticatedUser = new BehaviorSubject<User>(null);
 
@@ -58,6 +59,28 @@ export class AuthService {
 
   public logOut(): void {
     this._authenticatedUser.next(null);
+    localStorage.removeItem(this.localStorageUserKey);
+  }
+
+  public retrieveUserDataFromLocalStorage(): void {
+    const localStorageUserData = JSON.parse(
+      localStorage.getItem(this.localStorageUserKey)
+    );
+    if (
+      localStorageUserData &&
+      localStorageUserData.id &&
+      localStorageUserData.email &&
+      localStorageUserData._authToken &&
+      localStorageUserData._authTokenExpirationData
+    ) {
+      const userFromLocalStorage = new User(
+        localStorageUserData.id,
+        localStorageUserData.email,
+        localStorageUserData._authToken,
+        new Date(localStorageUserData._authTokenExpirationData)
+      );
+      this._authenticatedUser.next(userFromLocalStorage);
+    }
   }
 
   private handleAuthSignInOrSignUpError<T>(
@@ -103,6 +126,10 @@ export class AuthService {
 
         this._authenticatedUser.next(
           new User(id, email, token, expirationDate)
+        );
+        localStorage.setItem(
+          this.localStorageUserKey,
+          JSON.stringify(this._authenticatedUser.value)
         );
       })
     );
