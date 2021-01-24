@@ -78,9 +78,11 @@ export class AuthService {
     );
   }
 
-  private saveAuthenticatedUser<
+  private saveAuthenticatedUser = <
     T extends AuthSignInResponse | AuthSignUpResponse
-  >(source: Observable<T>): Observable<T> {
+  >(
+    source: Observable<T>
+  ): Observable<T> => {
     return source.pipe(
       tap((response) => {
         const { localId: id, email, idToken: token, expiresIn } = response;
@@ -94,5 +96,5 @@ export class AuthService {
         this._authenticatedUser = new User(id, email, token, expirationDate);
       })
     );
-  }
+  };
 }
