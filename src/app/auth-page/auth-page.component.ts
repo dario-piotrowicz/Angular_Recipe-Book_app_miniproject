@@ -8,6 +8,7 @@ import {
   AuthSignInResponse,
   AuthSignUpResponse,
 } from '../models/auth-response.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-page',
@@ -18,7 +19,7 @@ export class AuthPageComponent implements OnInit {
   public loading = false;
   public errorMessage: string = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -49,8 +50,8 @@ export class AuthPageComponent implements OnInit {
     requestObs: Observable<AuthSignUpResponse | AuthSignInResponse>
   ): void {
     requestObs.pipe(finalize(() => (this.loading = false))).subscribe(
-      (response) => {
-        console.log({ response });
+      () => {
+        this.router.navigate(['/recipes']);
       },
       (errorMessage) => {
         this.errorMessage = errorMessage;
