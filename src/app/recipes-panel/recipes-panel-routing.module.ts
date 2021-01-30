@@ -8,7 +8,7 @@ import { RecipesPanelComponent } from './recipes-panel.component';
 
 import { AvailableRecipeGuard } from '../guards/available-recipe.guard';
 
-const recipesPanelRouters: Routes = [
+const recipesPanelRoutes: Routes = [
   {
     path: 'recipes',
     component: RecipesPanelComponent,
@@ -36,7 +36,7 @@ const recipesPanelRouters: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(recipesPanelRouters)],
+  imports: [RouterModule.forChild(recipesPanelRoutes)],
   exports: [RouterModule],
 })
 export class RecipesPanelRoutingModule {}
