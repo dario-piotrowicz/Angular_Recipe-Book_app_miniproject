@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ShoppigListPanelComponent } from './shoppig-list-panel/shoppig-list-panel.component';
+import { shoppingListPanelComponent } from './shopping-list-panel/shopping-list-panel.component';
 
 import { AuthPageComponent } from './auth-page/auth-page.component';
 
@@ -13,7 +13,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'shopping-list',
-    component: ShoppigListPanelComponent,
+    component: shoppingListPanelComponent,
   },
   {
     path: 'auth',

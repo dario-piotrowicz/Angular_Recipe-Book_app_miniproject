@@ -9,9 +9,9 @@ import { RecipesPanelModule } from './recipes-panel/recipes-panel.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { ShoppigListPanelComponent } from './shoppig-list-panel/shoppig-list-panel.component';
-import { ShoppingListEditorComponent } from './shoppig-list-panel/shopping-list-editor/shopping-list-editor.component';
-import { ShoppingListComponent } from './shoppig-list-panel/shopping-list/shopping-list.component';
+import { shoppingListPanelComponent } from './shopping-list-panel/shopping-list-panel.component';
+import { ShoppingListEditorComponent } from './shopping-list-panel/shopping-list-editor/shopping-list-editor.component';
+import { ShoppingListComponent } from './shopping-list-panel/shopping-list/shopping-list.component';
 import { DropdownDirective } from './directives/dropdown.directive';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
@@ -21,7 +21,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
   declarations: [
     AppComponent,
     HeaderComponent,
-    ShoppigListPanelComponent,
+    shoppingListPanelComponent,
     ShoppingListEditorComponent,
     ShoppingListComponent,
     DropdownDirective,

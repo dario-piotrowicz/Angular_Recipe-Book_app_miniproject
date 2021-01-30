@@ -4,16 +4,15 @@ import { Ingredient } from '../models/ingredient.model';
 import { ShoppingListService } from '../services/shopping-list.service';
 
 @Component({
-  selector: 'app-shoppig-list-panel',
-  templateUrl: './shoppig-list-panel.component.html',
-  styleUrls: ['./shoppig-list-panel.component.css']
+  selector: 'app-shopping-list-panel',
+  templateUrl: './shopping-list-panel.component.html',
+  styleUrls: ['./shopping-list-panel.component.css'],
 })
-export class ShoppigListPanelComponent implements OnInit, OnDestroy {
+export class shoppingListPanelComponent implements OnInit, OnDestroy {
   public ingredientsList: Ingredient[] = [];
   private ingreditentsListChangeSubscription: Subscription;
 
-
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit(): void {
     const updateIngredientsList = () => {
@@ -21,7 +20,9 @@ export class ShoppigListPanelComponent implements OnInit, OnDestroy {
     };
 
     updateIngredientsList();
-    this.ingreditentsListChangeSubscription = this.shoppingListService.onIngredientsListChanged.subscribe( () => updateIngredientsList() );
+    this.ingreditentsListChangeSubscription = this.shoppingListService.onIngredientsListChanged.subscribe(
+      () => updateIngredientsList()
+    );
   }
 
   ngOnDestroy(): void {
