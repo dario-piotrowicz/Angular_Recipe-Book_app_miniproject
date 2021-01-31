@@ -13,6 +13,12 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { DropdownDirective } from './directives/dropdown.directive';
 
+const featureModules = [
+  AuthModule,
+  RecipesPanelModule,
+  ShoppingListPanelModule,
+];
+
 @NgModule({
   declarations: [AppComponent, HeaderComponent, DropdownDirective],
   imports: [
@@ -20,9 +26,7 @@ import { DropdownDirective } from './directives/dropdown.directive';
     HttpClientModule,
     AppRoutingModule,
     CoreModule,
-    AuthModule,
-    RecipesPanelModule,
-    ShoppingListPanelModule,
+    ...featureModules,
   ],
   bootstrap: [AppComponent],
 })
