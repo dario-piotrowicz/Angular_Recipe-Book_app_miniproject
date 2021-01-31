@@ -10,7 +10,7 @@ import { AvailableRecipeGuard } from './available-recipe.guard';
 
 const recipesPanelRoutes: Routes = [
   {
-    path: 'recipes',
+    path: '',
     component: RecipesPanelComponent,
     children: [
       {
