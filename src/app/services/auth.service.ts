@@ -112,7 +112,8 @@ export class AuthService {
   }) => Observable<never> = ({ error }): Observable<never> => {
     let errorMessage = 'An Error has occurred';
     if (error && error.error && error.error.message) {
-      const firebaseErrorMessage = error.error.message;
+      const rawFirebaseErrorMessage: string = error.error.message || '';
+      const firebaseErrorMessage = rawFirebaseErrorMessage.split(' ')[0];
       switch (firebaseErrorMessage) {
         case 'EMAIL_EXISTS':
           errorMessage = 'This email already exists';
@@ -122,6 +123,9 @@ export class AuthService {
           break;
         case 'INVALID_PASSWORD':
           errorMessage = 'The provided password is incorrect';
+          break;
+        case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+          errorMessage = 'Too many attempts, please try later';
           break;
       }
     }
