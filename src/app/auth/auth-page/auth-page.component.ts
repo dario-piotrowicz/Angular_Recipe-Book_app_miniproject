@@ -53,9 +53,7 @@ export class AuthPageComponent implements OnInit {
       () => {
         this.router.navigate(['/recipes']);
       },
-      (errorMessage) => {
-        this.errorMessage = errorMessage;
-      }
+      (errorMessage) => (this.errorMessage = errorMessage)
     );
   }
 }

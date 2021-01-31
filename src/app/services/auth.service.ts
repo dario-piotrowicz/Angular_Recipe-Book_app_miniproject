@@ -46,7 +46,10 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(this.handleAuthSignInOrSignUpError, this.saveAuthenticatedUser);
+      .pipe(
+        catchError(this.authSignInOrSignUpCatchErrorFunction),
+        this.saveAuthenticatedUser
+      );
   }
 
   public signIn(
@@ -62,7 +65,10 @@ export class AuthService {
           returnSecureToken: true,
         }
       )
-      .pipe(this.handleAuthSignInOrSignUpError, this.saveAuthenticatedUser);
+      .pipe(
+        catchError(this.authSignInOrSignUpCatchErrorFunction),
+        this.saveAuthenticatedUser
+      );
   }
 
   public logOut(): void {
@@ -101,31 +107,27 @@ export class AuthService {
     }
   }
 
-  private handleAuthSignInOrSignUpError<T>(
-    source: Observable<T>
-  ): Observable<T> {
-    return source.pipe(
-      catchError(({ error }) => {
-        let errorMessage = 'An Error has occurred';
-        if (error && error.error && error.error.message) {
-          const firebaseErrorMessage = error.error.message;
-          switch (firebaseErrorMessage) {
-            case 'EMAIL_EXISTS':
-              errorMessage = 'This email already exists';
-              break;
-            case 'EMAIL_NOT_FOUND':
-              errorMessage = 'This email does not exist';
-              break;
-            case 'INVALID_PASSWORD':
-              errorMessage = 'The provided password is incorrect';
-              break;
-          }
-        }
-        this._authenticatedUser.next(null);
-        return throwError(errorMessage);
-      })
-    );
-  }
+  private readonly authSignInOrSignUpCatchErrorFunction: ({
+    error: any,
+  }) => Observable<never> = ({ error }): Observable<never> => {
+    let errorMessage = 'An Error has occurred';
+    if (error && error.error && error.error.message) {
+      const firebaseErrorMessage = error.error.message;
+      switch (firebaseErrorMessage) {
+        case 'EMAIL_EXISTS':
+          errorMessage = 'This email already exists';
+          break;
+        case 'EMAIL_NOT_FOUND':
+          errorMessage = 'This email does not exist';
+          break;
+        case 'INVALID_PASSWORD':
+          errorMessage = 'The provided password is incorrect';
+          break;
+      }
+    }
+    this._authenticatedUser.next(null);
+    return throwError(errorMessage);
+  };
 
   private saveAuthenticatedUser = <
     T extends AuthSignInResponse | AuthSignUpResponse
