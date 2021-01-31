@@ -6,7 +6,7 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
 import { RecipeEditorComponent } from './recipe-editor/recipe-editor.component';
 import { RecipesPanelComponent } from './recipes-panel.component';
 
-import { AvailableRecipeGuard } from '../guards/available-recipe.guard';
+import { AvailableRecipeGuard } from './available-recipe.guard';
 
 const recipesPanelRoutes: Routes = [
   {
