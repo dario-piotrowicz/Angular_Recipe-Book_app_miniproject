@@ -14,6 +14,13 @@ const appRoutes: Routes = [
         (m) => m.RecipesPanelModule
       ),
   },
+  {
+    path: 'shopping-list',
+    loadChildren: () =>
+      import('./shopping-list-panel/shopping-list-panel.module').then(
+        (m) => m.ShoppingListPanelModule
+      ),
+  },
 ];
 
 @NgModule({
