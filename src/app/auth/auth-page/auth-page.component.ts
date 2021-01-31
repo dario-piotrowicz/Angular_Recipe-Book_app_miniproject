@@ -3,11 +3,11 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import {
   AuthSignInResponse,
   AuthSignUpResponse,
-} from '../models/auth-response.model';
+} from '../../models/auth-response.model';
 import { Router } from '@angular/router';
 
 @Component({
