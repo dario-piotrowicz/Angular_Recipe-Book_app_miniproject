@@ -10,3 +10,12 @@ During the course the instructor asks to install and use Boostrap version 3, I d
 \
 \
 I've worked with Angular for around a year before starting this course and there are a few basic things I did not know, I thought it'd be worthwhile to document them, so I created a [Basic (likely less-known) Angular Interesting Facts document](./extra/basic_facts.md).
+\
+\
+\
+&NewLine;
+
+### Deployment
+
+The project has been deployed via firebase at the following link:\
+https://angular-recipe-book-app-be.web.app/
