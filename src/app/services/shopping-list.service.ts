@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
+
+import { selectIngredientsList } from '../store/selectors/shopping-list.selectors';
+import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
 
@@ -7,28 +11,22 @@ import { Ingredient } from '../models/ingredient.model';
   providedIn: 'root',
 })
 export class ShoppingListService {
-  private _ingredientsListChanged = new Subject<void>();
-
   private _ingredientItemSelectedForEditing = new Subject<number>();
 
-  private _ingredientsList: Ingredient[] = [
-    new Ingredient('apples', 5),
-    new Ingredient('tomatoes', 10),
-  ];
+  private _ingredientsList$: Observable<Ingredient[]> = null;
 
-  constructor() {}
+  constructor(private store: Store) {
+    this._ingredientsList$ = this.store.select(selectIngredientsList);
+  }
 
-  public get ingredientsList(): Ingredient[] {
-    return this._ingredientsList.slice();
+  public get ingredientsList$(): Observable<Ingredient[]> {
+    return this._ingredientsList$;
   }
 
   public addItemsToIngredientsList(items: Ingredient[]) {
-    items.forEach((item) => this._ingredientsList.push({ ...item }));
-    this._ingredientsListChanged.next();
-  }
-
-  public get onIngredientsListChanged(): Observable<void> {
-    return this._ingredientsListChanged.asObservable();
+    items.forEach((ingredient) => {
+      this.store.dispatch(ShoppingListActions.addIngredient({ ingredient }));
+    });
   }
 
   public publishIngredientItemSelectedForEditing(index: number) {
@@ -40,24 +38,25 @@ export class ShoppingListService {
   }
 
   public getIngredientAt(index: number): Ingredient {
-    if (index < 0 || index >= this._ingredientsList.length) {
-      return null;
-    } else {
-      return { ...this._ingredientsList[index] };
-    }
+    return null;
+    // if (index < 0 || index >= this._ingredientsList.length) {
+    //   return null;
+    // } else {
+    //   return { ...this._ingredientsList[index] };
+    // }
   }
 
   public setIngredientAt(index: number, ingredient: Ingredient): void {
-    if (index >= 0 || index < this._ingredientsList.length) {
-      this._ingredientsList[index] = { ...ingredient };
-      this._ingredientsListChanged.next();
-    }
+    // if (index >= 0 || index < this._ingredientsList.length) {
+    //   this._ingredientsList[index] = { ...ingredient };
+    //   this._ingredientsListChanged.next();
+    // }
   }
 
   public deletetIngredientAt(index: number): void {
-    if (index >= 0 || index < this._ingredientsList.length) {
-      this._ingredientsList.splice(index, 1);
-      this._ingredientsListChanged.next();
-    }
+    // if (index >= 0 || index < this._ingredientsList.length) {
+    //   this._ingredientsList.splice(index, 1);
+    //   this._ingredientsListChanged.next();
+    // }
   }
 }
