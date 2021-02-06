@@ -42,7 +42,7 @@ export class ShoppingListEditorComponent implements OnInit, OnDestroy {
     if (this.indexSelectedForEditing < 0) {
       this.shoppingListService.addItemsToIngredientsList([newIngredient]);
     } else {
-      this.shoppingListService.setIngredientAt(
+      this.shoppingListService.updateIngredientAt(
         this.indexSelectedForEditing,
         newIngredient
       );

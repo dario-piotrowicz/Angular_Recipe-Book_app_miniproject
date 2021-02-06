@@ -46,17 +46,13 @@ export class ShoppingListService {
     // }
   }
 
-  public setIngredientAt(index: number, ingredient: Ingredient): void {
-    // if (index >= 0 || index < this._ingredientsList.length) {
-    //   this._ingredientsList[index] = { ...ingredient };
-    //   this._ingredientsListChanged.next();
-    // }
+  public updateIngredientAt(index: number, ingredient: Ingredient): void {
+    this.store.dispatch(
+      ShoppingListActions.updateIngredientAt({ index, ingredient })
+    );
   }
 
   public deletetIngredientAt(index: number): void {
-    // if (index >= 0 || index < this._ingredientsList.length) {
-    //   this._ingredientsList.splice(index, 1);
-    //   this._ingredientsListChanged.next();
-    // }
+    this.store.dispatch(ShoppingListActions.deleteIngredientAt({ index }));
   }
 }

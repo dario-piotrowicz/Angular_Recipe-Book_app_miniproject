@@ -17,6 +17,24 @@ const _shoppingListReducer = createReducer(
   on(ShoppingListActions.addIngredients, (state, { ingredients }) => ({
     ...state,
     ingredientsList: [...state.ingredientsList, ...ingredients],
+  })),
+  on(ShoppingListActions.updateIngredientAt, (state, { index, ingredient }) => {
+    const ingredientsList =
+      index >= 0 && index < state.ingredientsList.length
+        ? [
+            ...state.ingredientsList.slice(0, index),
+            { ...ingredient },
+            ...state.ingredientsList.slice(index + 1),
+          ]
+        : state.ingredientsList;
+    return {
+      ...state,
+      ingredientsList,
+    };
+  }),
+  on(ShoppingListActions.deleteIngredientAt, (state, { index }) => ({
+    ...state,
+    ingredientsList: state.ingredientsList.filter((_, idx) => idx !== index),
   }))
 );
 
