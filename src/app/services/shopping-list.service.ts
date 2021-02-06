@@ -6,6 +6,7 @@ import { selectIngredientsList } from '../store/selectors/shopping-list.selector
 import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +14,15 @@ import { Ingredient } from '../models/ingredient.model';
 export class ShoppingListService {
   private _ingredientItemSelectedForEditing = new Subject<number>();
 
+  private _ingredientsList: Ingredient[] = null;
   private _ingredientsList$: Observable<Ingredient[]> = null;
 
   constructor(private store: Store) {
-    this._ingredientsList$ = this.store.select(selectIngredientsList);
+    this._ingredientsList$ = this.store
+      .select(selectIngredientsList)
+      .pipe(
+        tap((ingredientsList) => (this._ingredientsList = ingredientsList))
+      );
   }
 
   public get ingredientsList$(): Observable<Ingredient[]> {
@@ -38,12 +44,11 @@ export class ShoppingListService {
   }
 
   public getIngredientAt(index: number): Ingredient {
-    return null;
-    // if (index < 0 || index >= this._ingredientsList.length) {
-    //   return null;
-    // } else {
-    //   return { ...this._ingredientsList[index] };
-    // }
+    if (index < 0 || index >= this._ingredientsList.length) {
+      return null;
+    } else {
+      return { ...this._ingredientsList[index] };
+    }
   }
 
   public updateIngredientAt(index: number, ingredient: Ingredient): void {
