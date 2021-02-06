@@ -24,9 +24,9 @@ export class ShoppingListService {
   }
 
   public addItemsToIngredientsList(items: Ingredient[]) {
-    items.forEach((ingredient) => {
-      this.store.dispatch(ShoppingListActions.addIngredient({ ingredient }));
-    });
+    this.store.dispatch(
+      ShoppingListActions.addIngredients({ ingredients: items })
+    );
   }
 
   public publishIngredientItemSelectedForEditing(index: number) {
