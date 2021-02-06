@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -17,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
     AppRoutingModule,
     CoreModule,
     SharedModule,
+    StoreModule.forRoot({}, {}),
   ],
   bootstrap: [AppComponent],
 })
