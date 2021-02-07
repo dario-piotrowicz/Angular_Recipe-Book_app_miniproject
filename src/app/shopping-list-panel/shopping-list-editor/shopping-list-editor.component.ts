@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
@@ -17,21 +18,23 @@ export class ShoppingListEditorComponent implements OnInit, OnDestroy {
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit(): void {
-    this.itemSelectedSubscription = this.shoppingListService.onIngredientItemSelectedForEditing.subscribe(
-      (index) => {
+    this.itemSelectedSubscription = this.shoppingListService.indexOfIngredientItemSelectedForEditing
+      .pipe(filter((index: number) => index > -1))
+      .subscribe((index: number) => {
         this.indexSelectedForEditing = index;
-        const selectedIngredient = this.shoppingListService.getIngredientAt(
-          index
-        );
-        this.form.reset({
-          ...selectedIngredient,
-        });
-      }
-    );
+        this.shoppingListService
+          .getIngredientAt(index)
+          .subscribe((selectedIngredient) => {
+            this.form.reset({
+              ...selectedIngredient,
+            });
+          });
+      });
   }
 
   ngOnDestroy(): void {
     this.itemSelectedSubscription.unsubscribe();
+    this.shoppingListService.unselectIngredientForEditing();
   }
 
   public addOrEditIngredient(): void {

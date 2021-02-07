@@ -7,3 +7,9 @@ export const selectIngredientsList = createSelector(
   selectShoppingList,
   (shoppingList: ShoppingListState) => shoppingList.ingredientsList
 );
+
+export const selectIndexOfIngredientSelectedForEditing = createSelector(
+  selectShoppingList,
+  (shoppingList: ShoppingListState) =>
+    shoppingList.indexOfIngredientSelectedForEditing
+);

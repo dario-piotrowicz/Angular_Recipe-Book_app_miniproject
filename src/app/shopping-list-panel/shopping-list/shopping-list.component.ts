@@ -13,6 +13,6 @@ export class ShoppingListComponent {
   constructor(private shoppingListService: ShoppingListService) {}
 
   public onEditItem(index: number): void {
-    this.shoppingListService.publishIngredientItemSelectedForEditing(index);
+    this.shoppingListService.selectIngredientForEditing(index);
   }
 }

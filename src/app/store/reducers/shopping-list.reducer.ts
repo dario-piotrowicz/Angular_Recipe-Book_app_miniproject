@@ -10,6 +10,7 @@ const initialState: ShoppingListState = {
     new Ingredient('apples', 5),
     new Ingredient('tomatoes', 10),
   ],
+  indexOfIngredientSelectedForEditing: -1,
 };
 
 const _shoppingListReducer = createReducer(
@@ -35,6 +36,11 @@ const _shoppingListReducer = createReducer(
   on(ShoppingListActions.deleteIngredientAt, (state, { index }) => ({
     ...state,
     ingredientsList: state.ingredientsList.filter((_, idx) => idx !== index),
+  })),
+  on(ShoppingListActions.selectIngredientForEditing, (state, { index }) => ({
+    ...state,
+    indexOfIngredientSelectedForEditing:
+      index >= 0 && index < state.ingredientsList.length ? index : -1,
   }))
 );
 

@@ -1,28 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { selectIngredientsList } from '../store/selectors/shopping-list.selectors';
+import {
+  selectIndexOfIngredientSelectedForEditing,
+  selectIngredientsList,
+} from '../store/selectors/shopping-list.selectors';
 import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
-import { tap } from 'rxjs/operators';
+import { map, min, take, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingListService {
-  private _ingredientItemSelectedForEditing = new Subject<number>();
-
-  private _ingredientsList: Ingredient[] = null;
   private _ingredientsList$: Observable<Ingredient[]> = null;
 
   constructor(private store: Store) {
-    this._ingredientsList$ = this.store
-      .select(selectIngredientsList)
-      .pipe(
-        tap((ingredientsList) => (this._ingredientsList = ingredientsList))
-      );
+    this._ingredientsList$ = this.store.select(selectIngredientsList);
   }
 
   public get ingredientsList$(): Observable<Ingredient[]> {
@@ -35,29 +31,42 @@ export class ShoppingListService {
     );
   }
 
-  public publishIngredientItemSelectedForEditing(index: number) {
-    this._ingredientItemSelectedForEditing.next(index);
+  public selectIngredientForEditing(index: number) {
+    this.store.dispatch(
+      ShoppingListActions.selectIngredientForEditing({ index })
+    );
   }
 
-  public get onIngredientItemSelectedForEditing(): Observable<number> {
-    return this._ingredientItemSelectedForEditing.asObservable();
+  public unselectIngredientForEditing() {
+    this.store.dispatch(
+      ShoppingListActions.selectIngredientForEditing({ index: -1 })
+    );
   }
 
-  public getIngredientAt(index: number): Ingredient {
-    if (index < 0 || index >= this._ingredientsList.length) {
-      return null;
-    } else {
-      return { ...this._ingredientsList[index] };
-    }
+  public get indexOfIngredientItemSelectedForEditing(): Observable<number> {
+    return this.store.select(selectIndexOfIngredientSelectedForEditing);
+  }
+
+  public getIngredientAt(index: number): Observable<Ingredient> {
+    return this._ingredientsList$.pipe(
+      take(1),
+      map((ingredientsList) =>
+        index >= 0 && index < ingredientsList.length
+          ? ingredientsList[index]
+          : null
+      )
+    );
   }
 
   public updateIngredientAt(index: number, ingredient: Ingredient): void {
     this.store.dispatch(
       ShoppingListActions.updateIngredientAt({ index, ingredient })
     );
+    this.unselectIngredientForEditing();
   }
 
   public deletetIngredientAt(index: number): void {
     this.store.dispatch(ShoppingListActions.deleteIngredientAt({ index }));
+    this.unselectIngredientForEditing();
   }
 }

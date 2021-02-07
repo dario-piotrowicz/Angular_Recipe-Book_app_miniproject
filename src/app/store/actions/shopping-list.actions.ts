@@ -15,3 +15,8 @@ export const deleteIngredientAt = createAction(
   '[ShoppingListService] Delete Ingredient at',
   props<{ index: number }>()
 );
+
+export const selectIngredientForEditing = createAction(
+  '[ShoppingListService] Select Ingredient For Editing',
+  props<{ index: number }>()
+);
