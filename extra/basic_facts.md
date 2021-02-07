@@ -31,6 +31,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
 
   _Note: I don't think this fact is to be always keept in mind, nor it can often be useful while writing an Angular app, it is nonetheless something interesting which helps us understand how the application basically gets instantiated._
 
+\
+\
+&NewLine;
+
 - ## The \*ngIf's else
 
   For opposite conditions in templates I've always used (and saw the same done by others) the `ngIf` directive in the following way:
@@ -53,6 +57,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
 
   Although I find this implementation a bit ackward, I do find it quite nice as it does indeed allow us not to have to repeat our condition multiple times.
 
+\
+\
+&NewLine;
+
 - ## The @Input and @Output argument
 
   The `@Input()` and `@Output()` decorators used in components, or more in genaral in directives, can take a string argument which will generate an alias for the property/emitter which can be referenced by outside elements.
@@ -62,6 +70,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   I never thought much of it but when I was reminded of this functionality I thought that it could actually be useful sometimes, for example if a project have some strict naming conventions and you end up needing a property's named to be different between the internal class implementation and the outside's binding.
 
   Altough I don't think this is a very frequent feature to use, I do think that it could be beneficial and generate some clean/clever code if used in the right way. So I think it's still worth remembering so that we do have this additional small tool ready in our toolbox.
+
+\
+\
+&NewLine;
 
 - ## Using setters/getters for input bound properties
 
@@ -82,6 +94,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   ```
 
   I was not aware of this and would handle the data in a different way, like processing it using `ngOnChanges` or similar solutions. But using setters/getters in such a way seems to me like a much more elegant and efficient solution, which allows us to process the data as soon as it is bound to the component/directive in a clean and direct way, side effect code related to the value can also additionaly be applied (this can help avoid unnecessary subscriptions/checks).
+
+\
+\
+&NewLine;
 
 - ## ViewEncapsulation
 
@@ -104,6 +120,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   - `Emulated` simply implements the default behaviour of adding the extra attribute to the elements and the css
   - `None` turns off the behaviour, reverting to the standard css behaviour in which css files are all merged into one and rules can override each other (this is undesirable, expecially considering the fact that we cannot clearly know in which order the css files are bundled, but there can indeed be instances in which this may come in handy)
   - `ShadowDom` implements the behaviour by using the browser's Shadow Dom which is an advanced feature which basically allows to implement the css isolation in a more web-standard / browser-native manner. This feature (as of yet) is however not widely supported by browsers and thus should be used with caution possibly alongside a polyfill libary.
+
+\
+\
+&NewLine;
 
 - ## providedIn
 
@@ -136,6 +156,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
   - `'platform'`, this create a singleton shared by all applications on the page. Basically if you have multiuple Angular apps in the same page this allows you to share a singleton instance of that service among them, whilst for standard stand-alone applications the result is identical to `'root'`
 
   You can read more about this new values in the [official documentation](https://angular.io/api/core/Injectable) or in the [Improved Dependency Injection with the new providedIn scopes 'any' and 'platform'](https://dev.to/christiankohler/improved-dependeny-injection-with-the-new-providedin-scopes-any-and-platform-30bb) Dev blog post.
+
+\
+\
+&NewLine;
 
 - ## Content Projection
 
@@ -181,6 +205,10 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
 
   For more details check this very nice NgConf presentation by Eudes Petonnet:
   [Deep dive into content projection](https://youtu.be/PTwKhxLZ3jI).
+
+\
+\
+&NewLine;
 
 - ## BrowserModule & CommondModule
 
