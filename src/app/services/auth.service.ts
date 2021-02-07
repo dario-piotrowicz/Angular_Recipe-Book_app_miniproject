@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  BehaviorSubject,
-  Observable,
-  Subscription,
-  throwError,
-  timer,
-} from 'rxjs';
+import { Observable, Subscription, throwError, timer } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+
+import { Store } from '@ngrx/store';
+
+import { selectUser } from '../store/selectors/auth.selectors';
+import * as AuthActions from '../store/actions/auth.actions';
 
 import {
   AuthSignInResponse,
@@ -23,15 +22,13 @@ export class AuthService {
   private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
   private readonly localStorageUserKey = 'recipeBookAppUserData';
 
-  private _authenticatedUser = new BehaviorSubject<User>(null);
-
   private expirationTimerSubscription: Subscription = null;
 
   public get authenticatedUser(): Observable<User> {
-    return this._authenticatedUser.asObservable();
+    return this.store.select(selectUser);
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store: Store) {}
 
   public signUp(
     email: string,
@@ -72,7 +69,7 @@ export class AuthService {
   }
 
   public logOut(): void {
-    this._authenticatedUser.next(null);
+    this.store.dispatch(AuthActions.logOut());
     localStorage.removeItem(this.localStorageUserKey);
     if (this.expirationTimerSubscription) {
       this.expirationTimerSubscription.unsubscribe();
@@ -100,7 +97,7 @@ export class AuthService {
         localStorageUserData._authToken,
         tokenExpirationDate
       );
-      this._authenticatedUser.next(userFromLocalStorage);
+      this.store.dispatch(AuthActions.logIn({ user: userFromLocalStorage }));
       const expiresInInMillis =
         tokenExpirationDate.getTime() - new Date().getTime();
       this.setExpirationTimer(expiresInInMillis);
@@ -129,7 +126,7 @@ export class AuthService {
           break;
       }
     }
-    this._authenticatedUser.next(null);
+    this.store.dispatch(AuthActions.logOut());
     return throwError(errorMessage);
   };
 
@@ -148,13 +145,13 @@ export class AuthService {
           currentTimeInMillis + expiresInInMillis
         );
 
-        this._authenticatedUser.next(
-          new User(id, email, token, expirationDate)
+        const user = new User(id, email, token, expirationDate);
+        this.store.dispatch(
+          AuthActions.logIn({
+            user: new User(id, email, token, expirationDate),
+          })
         );
-        localStorage.setItem(
-          this.localStorageUserKey,
-          JSON.stringify(this._authenticatedUser.value)
-        );
+        localStorage.setItem(this.localStorageUserKey, JSON.stringify(user));
         this.setExpirationTimer(expiresInInMillis);
       })
     );

@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { StoreModule } from '@ngrx/store';
 import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
+import { authReducer } from './store/reducers/auth.reducer';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core.module';
@@ -22,6 +23,7 @@ import { HeaderComponent } from './header/header.component';
     SharedModule,
     StoreModule.forRoot({
       shoppingList: shoppingListReducer,
+      auth: authReducer,
     }),
   ],
   bootstrap: [AppComponent],
