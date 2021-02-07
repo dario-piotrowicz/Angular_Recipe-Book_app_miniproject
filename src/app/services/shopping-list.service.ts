@@ -9,7 +9,6 @@ import {
 import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
-import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
