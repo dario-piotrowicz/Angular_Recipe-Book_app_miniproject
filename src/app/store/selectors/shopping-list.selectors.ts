@@ -8,8 +8,17 @@ export const selectIngredientsList = createSelector(
   (shoppingList: ShoppingListState) => shoppingList.ingredientsList
 );
 
-export const selectIndexOfIngredientSelectedForEditing = createSelector(
+const selectIndexOfIngredientSelectedForEditing = createSelector(
   selectShoppingList,
   (shoppingList: ShoppingListState) =>
     shoppingList.indexOfIngredientSelectedForEditing
+);
+
+export const selectSelectedIngredientForEditing = createSelector(
+  selectShoppingList,
+  selectIndexOfIngredientSelectedForEditing,
+  (shoppingList, index) =>
+    index >= 0 && index < shoppingList.ingredientsList.length
+      ? { ...shoppingList.ingredientsList[index] }
+      : null
 );

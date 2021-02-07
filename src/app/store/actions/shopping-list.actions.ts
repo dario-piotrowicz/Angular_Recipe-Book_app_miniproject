@@ -6,17 +6,20 @@ export const addIngredients = createAction(
   props<{ ingredients: Ingredient[] }>()
 );
 
-export const updateIngredientAt = createAction(
-  '[ShoppingListService] Update Ingredient at',
-  props<{ index: number; ingredient: Ingredient }>()
+export const updateSelectedIngredient = createAction(
+  '[ShoppingListService] Update Selected Ingredient',
+  props<{ ingredient: Ingredient }>()
 );
 
-export const deleteIngredientAt = createAction(
-  '[ShoppingListService] Delete Ingredient at',
-  props<{ index: number }>()
+export const deleteSelectedIngredient = createAction(
+  '[ShoppingListService] Delete Ingredient'
 );
 
 export const selectIngredientForEditing = createAction(
   '[ShoppingListService] Select Ingredient For Editing',
   props<{ index: number }>()
+);
+
+export const unselectIngredientForEditing = createAction(
+  '[ShoppingListService] Unselect Ingredient For Editing'
 );

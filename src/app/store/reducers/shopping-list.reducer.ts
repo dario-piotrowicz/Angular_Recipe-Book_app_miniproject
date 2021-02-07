@@ -19,7 +19,8 @@ const _shoppingListReducer = createReducer(
     ...state,
     ingredientsList: [...state.ingredientsList, ...ingredients],
   })),
-  on(ShoppingListActions.updateIngredientAt, (state, { index, ingredient }) => {
+  on(ShoppingListActions.updateSelectedIngredient, (state, { ingredient }) => {
+    const index = state.indexOfIngredientSelectedForEditing;
     const ingredientsList =
       index >= 0 && index < state.ingredientsList.length
         ? [
@@ -33,14 +34,22 @@ const _shoppingListReducer = createReducer(
       ingredientsList,
     };
   }),
-  on(ShoppingListActions.deleteIngredientAt, (state, { index }) => ({
-    ...state,
-    ingredientsList: state.ingredientsList.filter((_, idx) => idx !== index),
-  })),
+  on(ShoppingListActions.deleteSelectedIngredient, (state) => {
+    const index = state.indexOfIngredientSelectedForEditing;
+    return {
+      ...state,
+      ingredientsList: state.ingredientsList.filter((_, idx) => idx !== index),
+      indexOfIngredientSelectedForEditing: -1,
+    };
+  }),
   on(ShoppingListActions.selectIngredientForEditing, (state, { index }) => ({
     ...state,
     indexOfIngredientSelectedForEditing:
       index >= 0 && index < state.ingredientsList.length ? index : -1,
+  })),
+  on(ShoppingListActions.unselectIngredientForEditing, (state) => ({
+    ...state,
+    indexOfIngredientSelectedForEditing: -1,
   }))
 );
 

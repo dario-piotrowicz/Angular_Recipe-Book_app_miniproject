@@ -3,13 +3,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import {
-  selectIndexOfIngredientSelectedForEditing,
+  selectSelectedIngredientForEditing,
   selectIngredientsList,
 } from '../store/selectors/shopping-list.selectors';
 import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
-import { map, min, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -38,35 +38,20 @@ export class ShoppingListService {
   }
 
   public unselectIngredientForEditing() {
+    this.store.dispatch(ShoppingListActions.unselectIngredientForEditing());
+  }
+
+  public get selectedIngredientForEditing(): Observable<Ingredient> {
+    return this.store.select(selectSelectedIngredientForEditing);
+  }
+
+  public updateSelectedIngredient(ingredient: Ingredient): void {
     this.store.dispatch(
-      ShoppingListActions.selectIngredientForEditing({ index: -1 })
+      ShoppingListActions.updateSelectedIngredient({ ingredient })
     );
   }
 
-  public get indexOfIngredientItemSelectedForEditing(): Observable<number> {
-    return this.store.select(selectIndexOfIngredientSelectedForEditing);
-  }
-
-  public getIngredientAt(index: number): Observable<Ingredient> {
-    return this._ingredientsList$.pipe(
-      take(1),
-      map((ingredientsList) =>
-        index >= 0 && index < ingredientsList.length
-          ? ingredientsList[index]
-          : null
-      )
-    );
-  }
-
-  public updateIngredientAt(index: number, ingredient: Ingredient): void {
-    this.store.dispatch(
-      ShoppingListActions.updateIngredientAt({ index, ingredient })
-    );
-    this.unselectIngredientForEditing();
-  }
-
-  public deletetIngredientAt(index: number): void {
-    this.store.dispatch(ShoppingListActions.deleteIngredientAt({ index }));
-    this.unselectIngredientForEditing();
+  public deletetSelectedIngredient(): void {
+    this.store.dispatch(ShoppingListActions.deleteSelectedIngredient());
   }
 }
