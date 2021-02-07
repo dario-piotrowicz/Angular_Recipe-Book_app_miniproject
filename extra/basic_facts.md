@@ -181,3 +181,16 @@ This is by no means a comprehensive or necessary list of facts, it's just a list
 
   For more details check this very nice NgConf presentation by Eudes Petonnet:
   [Deep dive into content projection](https://youtu.be/PTwKhxLZ3jI).
+
+- ## BrowserModule & CommondModule
+
+  This is something I never noticed because I mostly rely on the Angular CLI when creating modules and the CLI takes care of this by iteself, but you can notice that the `appModule` imports a module called `BrowserModule` whilst every other module imports a the `CommonModule` (this import is not necessary but it is usually present in all modules except the app one).
+
+  The `CommonModule` provides all the basics of Angular templating such as bindings, *ngIf, *ngFor, etc...
+  So, if a module will implement components chances are this module will need to be imported.
+
+  The `appModule` imports the `BrowserModule` instead, this module exports all that is necessary to run an Angular application and it also imports and exports the `CommonModule`, thus this is why the `appModule` doens't need to directly import the latter.
+
+  It is also important to mention that `BrowserModule` needs to be imported in and only in the application's root module, as implementing it in any other module is unnecessary and may also cause issues or strange behaviours (since providers would end up having difference instances throughout the application).
+
+  This is also exaplained in the official Angular's ngModule FAQ under [Should I import BrowserModule or CommonModule?](https://angular.io/guide/ngmodule-faq#should-i-import-browsermodule-or-commonmodule)
