@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { map } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 
 import { RecipesService } from './recipes.service';
 import { Recipe } from '../models/recipe.model';
@@ -21,8 +21,13 @@ export class DataNetworkService {
   ) {}
 
   public saveRecipes(): void {
-    const recipes = this.recipesService.recipes;
-    this.http.put(this.firebaseRecipesUrl, recipes).subscribe(() => {});
+    this.recipesService
+      .getRecipes()
+      .pipe(
+        take(1),
+        switchMap((recipes) => this.http.put(this.firebaseRecipesUrl, recipes))
+      )
+      .subscribe(() => {});
   }
 
   public loadRecipes(): void {
@@ -37,7 +42,7 @@ export class DataNetworkService {
         )
       )
       .subscribe((recipes) => {
-        this.recipesService.recipes = recipes;
+        this.recipesService.setRecipes(recipes);
       });
   }
 }

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12">
     <app-recipes-list-item
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of recipes | async"
       [recipe]="recipe"
     ></app-recipes-list-item>
   </div>

@@ -28,7 +28,9 @@ export class RecipeEditorComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const id = params['id'];
       if (id) {
-        this.recipe = this.recipesService.getRecipeById(params['id']);
+        this.recipesService
+          .getRecipeById(params['id'])
+          .subscribe((recipe) => (this.recipe = recipe));
       } else {
         this.recipe = null;
       }

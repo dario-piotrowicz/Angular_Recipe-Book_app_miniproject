@@ -8,6 +8,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
 import { authReducer } from './store/reducers/auth.reducer';
 import { AuthEffects } from './store/effects/auth.effects';
+import { recipesReducer } from './store/reducers/recipes.reducer';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core.module';
@@ -28,6 +29,7 @@ import { environment } from 'src/environments/environment';
     StoreModule.forRoot({
       shoppingList: shoppingListReducer,
       auth: authReducer,
+      recipes: recipesReducer,
     }),
     StoreDevtoolsModule.instrument({ logOnly: !environment.production }),
     EffectsModule.forRoot([AuthEffects]),
