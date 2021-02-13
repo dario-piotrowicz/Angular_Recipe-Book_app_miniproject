@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+
 import { Observable, Subscription, timer } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { skip } from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
@@ -10,11 +11,6 @@ import {
   selectUser,
 } from '../store/selectors/auth.selectors';
 import * as AuthActions from '../store/actions/auth.actions';
-
-import {
-  AuthSignInResponse,
-  AuthSignUpResponse,
-} from '../models/auth-response.model';
 
 import { User } from '../models/user.model';
 
@@ -30,7 +26,25 @@ export class AuthService {
     return this.store.select(selectUser);
   }
 
-  constructor(private store: Store) {}
+  constructor(private store: Store) {
+    this.store
+      .select(selectUser)
+      .pipe(skip(1))
+      .subscribe((user) => {
+        if (!user) {
+          localStorage.removeItem(this.localStorageUserKey);
+          if (this.expirationTimerSubscription) {
+            this.expirationTimerSubscription.unsubscribe();
+            this.expirationTimerSubscription = null;
+          }
+        } else {
+          localStorage.setItem(this.localStorageUserKey, JSON.stringify(user));
+          const expiresInInMillis =
+            user.authTokenExpirationDate.getTime() - new Date().getTime();
+          this.setExpirationTimer(expiresInInMillis);
+        }
+      });
+  }
 
   public get isLoading(): Observable<boolean> {
     return this.store.select(selectLoading);
@@ -50,14 +64,9 @@ export class AuthService {
 
   public logOut(): void {
     this.store.dispatch(AuthActions.logOut());
-    localStorage.removeItem(this.localStorageUserKey);
-    if (this.expirationTimerSubscription) {
-      this.expirationTimerSubscription.unsubscribe();
-      this.expirationTimerSubscription = null;
-    }
   }
 
-  public retrieveUserDataFromLocalStorage(): void {
+  public autoLoginFromLocalStorage(): void {
     const localStorageUserData = JSON.parse(
       localStorage.getItem(this.localStorageUserKey)
     );
@@ -66,10 +75,10 @@ export class AuthService {
       localStorageUserData.id &&
       localStorageUserData.email &&
       localStorageUserData._authToken &&
-      localStorageUserData._authTokenExpirationDate
+      localStorageUserData.authTokenExpirationDate
     ) {
       const tokenExpirationDate = new Date(
-        localStorageUserData._authTokenExpirationDate
+        localStorageUserData.authTokenExpirationDate
       );
       const userFromLocalStorage = new User(
         localStorageUserData.id,
@@ -78,38 +87,8 @@ export class AuthService {
         tokenExpirationDate
       );
       this.store.dispatch(AuthActions.logIn({ user: userFromLocalStorage }));
-      const expiresInInMillis =
-        tokenExpirationDate.getTime() - new Date().getTime();
-      this.setExpirationTimer(expiresInInMillis);
     }
   }
-
-  private saveAuthenticatedUser = <
-    T extends AuthSignInResponse | AuthSignUpResponse
-  >(
-    source: Observable<T>
-  ): Observable<T> => {
-    return source.pipe(
-      tap((response) => {
-        const { localId: id, email, idToken: token, expiresIn } = response;
-
-        const currentTimeInMillis = new Date().getTime();
-        const expiresInInMillis = parseInt(expiresIn) * 1000;
-        const expirationDate = new Date(
-          currentTimeInMillis + expiresInInMillis
-        );
-
-        const user = new User(id, email, token, expirationDate);
-        this.store.dispatch(
-          AuthActions.logIn({
-            user: new User(id, email, token, expirationDate),
-          })
-        );
-        localStorage.setItem(this.localStorageUserKey, JSON.stringify(user));
-        this.setExpirationTimer(expiresInInMillis);
-      })
-    );
-  };
 
   private setExpirationTimer(millsecondsToExpiration: number): void {
     if (this.expirationTimerSubscription) {

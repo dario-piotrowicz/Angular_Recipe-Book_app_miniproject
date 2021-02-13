@@ -8,6 +8,6 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   constructor(authService: AuthService) {
-    authService.retrieveUserDataFromLocalStorage();
+    authService.autoLoginFromLocalStorage();
   }
 }
