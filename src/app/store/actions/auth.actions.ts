@@ -11,6 +11,16 @@ export const singInRequestError = createAction(
   props<{ errorMessage: string }>()
 );
 
+export const singUpRequestStart = createAction(
+  '[AuthService] signUp Request Start',
+  props<{ email: string; password: string }>()
+);
+
+export const singUpRequestError = createAction(
+  '[AuthService] signUp Request Error',
+  props<{ errorMessage: string }>()
+);
+
 export const logIn = createAction(
   '[AuthService] LogIn',
   props<{ user: User }>()

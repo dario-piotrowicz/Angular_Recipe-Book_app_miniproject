@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription, throwError, timer } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, Subscription, timer } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
@@ -23,7 +22,6 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
   private readonly localStorageUserKey = 'recipeBookAppUserData';
 
   private expirationTimerSubscription: Subscription = null;
@@ -32,26 +30,7 @@ export class AuthService {
     return this.store.select(selectUser);
   }
 
-  constructor(private http: HttpClient, private store: Store) {}
-
-  public signUp(
-    email: string,
-    password: string
-  ): Observable<AuthSignUpResponse> {
-    return this.http
-      .post<AuthSignUpResponse>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.ApiKey}`,
-        {
-          email,
-          password,
-          returnSecureToken: true,
-        }
-      )
-      .pipe(
-        catchError(this.authSignInOrSignUpCatchErrorFunction),
-        this.saveAuthenticatedUser
-      );
-  }
+  constructor(private store: Store) {}
 
   public get isLoading(): Observable<boolean> {
     return this.store.select(selectLoading);
@@ -63,6 +42,10 @@ export class AuthService {
 
   public signIn(email: string, password: string): void {
     this.store.dispatch(AuthActions.singInRequestStart({ email, password }));
+  }
+
+  public signUp(email: string, password: string): void {
+    this.store.dispatch(AuthActions.singUpRequestStart({ email, password }));
   }
 
   public logOut(): void {
@@ -100,32 +83,6 @@ export class AuthService {
       this.setExpirationTimer(expiresInInMillis);
     }
   }
-
-  private readonly authSignInOrSignUpCatchErrorFunction: ({
-    error: any,
-  }) => Observable<never> = ({ error }): Observable<never> => {
-    let errorMessage = 'An Error has occurred';
-    if (error && error.error && error.error.message) {
-      const rawFirebaseErrorMessage: string = error.error.message || '';
-      const firebaseErrorMessage = rawFirebaseErrorMessage.split(' ')[0];
-      switch (firebaseErrorMessage) {
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email already exists';
-          break;
-        case 'EMAIL_NOT_FOUND':
-          errorMessage = 'This email does not exist';
-          break;
-        case 'INVALID_PASSWORD':
-          errorMessage = 'The provided password is incorrect';
-          break;
-        case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-          errorMessage = 'Too many attempts, please try later';
-          break;
-      }
-    }
-    this.store.dispatch(AuthActions.logOut());
-    return throwError(errorMessage);
-  };
 
   private saveAuthenticatedUser = <
     T extends AuthSignInResponse | AuthSignUpResponse

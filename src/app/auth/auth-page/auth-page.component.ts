@@ -1,14 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
-import {
-  AuthSignInResponse,
-  AuthSignUpResponse,
-} from '../../models/auth-response.model';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-page',
@@ -51,18 +48,6 @@ export class AuthPageComponent implements OnInit, OnDestroy {
   }
 
   private handleSignUp(email: string, password: string): void {
-    const requestObs = this.authService.signUp(email, password);
-    this.handleSignInOrSignUpServiceRequest(requestObs);
-  }
-
-  private handleSignInOrSignUpServiceRequest(
-    requestObs: Observable<AuthSignUpResponse | AuthSignInResponse>
-  ): void {
-    requestObs.subscribe(
-      () => {
-        this.router.navigate(['/recipes']);
-      },
-      (errorMessage) => (this.errorMessage = errorMessage)
-    );
+    this.authService.signUp(email, password);
   }
 }

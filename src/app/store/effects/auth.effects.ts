@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -7,20 +8,17 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as AuthActions from '../actions/auth.actions';
 
-import { AuthSignInResponse } from '../../models/auth-response.model';
+import {
+  AuthSignInResponse,
+  AuthSignUpResponse,
+} from '../../models/auth-response.model';
 import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
-import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthEffects {
   private readonly ApiKey = 'AIzaSyCyGRMzH8ZaO4L_A-AIXzRKkiDdsYgREcE';
 
-  constructor(
-    private actions: Actions,
-    private http: HttpClient,
-    private authServie: AuthService
-  ) {}
+  constructor(private actions: Actions, private http: HttpClient) {}
 
   signIn = createEffect(() =>
     this.actions.pipe(
@@ -44,16 +42,47 @@ export class AuthEffects {
           return AuthActions.singInRequestError({ errorMessage });
         }
 
-        const user = this.createUserFromAuthSingInResponse(
+        const user = this.createUserFromAuthSingInOrSignUpResponse(
           response as AuthSignInResponse
         );
-        // this.authServie.saveAuthenticatedUser();
         return AuthActions.logIn({ user });
       })
     )
   );
 
-  private createUserFromAuthSingInResponse(response: AuthSignInResponse): User {
+  signUp = createEffect(() =>
+    this.actions.pipe(
+      ofType(AuthActions.singUpRequestStart),
+      switchMap(({ email, password }) =>
+        this.http
+          .post<AuthSignUpResponse>(
+            `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.ApiKey}`,
+            {
+              email,
+              password,
+              returnSecureToken: true,
+            }
+          )
+          .pipe(catchError((error) => of({ error })))
+      ),
+      map((response: AuthSignUpResponse | { error: any }) => {
+        const error = (response as { error: any }).error;
+        if (error) {
+          const errorMessage = this.createErrorMessageFromFirebaseError(error);
+          return AuthActions.singInRequestError({ errorMessage });
+        }
+
+        const user = this.createUserFromAuthSingInOrSignUpResponse(
+          response as AuthSignUpResponse
+        );
+        return AuthActions.logIn({ user });
+      })
+    )
+  );
+
+  private createUserFromAuthSingInOrSignUpResponse(
+    response: AuthSignInResponse | AuthSignUpResponse
+  ): User {
     const {
       localId: id,
       email,

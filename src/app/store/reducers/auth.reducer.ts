@@ -21,17 +21,25 @@ const _authReducer = createReducer(
     user: null,
     loading: false,
   })),
-  on(AuthActions.singInRequestStart, (state) => ({
-    ...state,
-    errorMessage: null,
-    loading: true,
-  })),
-  on(AuthActions.singInRequestError, (state, { errorMessage }) => ({
-    ...state,
-    user: null,
-    errorMessage,
-    loading: false,
-  }))
+  on(
+    AuthActions.singInRequestStart,
+    AuthActions.singUpRequestStart,
+    (state) => ({
+      ...state,
+      errorMessage: null,
+      loading: true,
+    })
+  ),
+  on(
+    AuthActions.singInRequestError,
+    AuthActions.singUpRequestError,
+    (state, { errorMessage }) => ({
+      ...state,
+      user: null,
+      errorMessage,
+      loading: false,
+    })
+  )
 );
 
 export function authReducer(state: AuthState, action: Action) {
