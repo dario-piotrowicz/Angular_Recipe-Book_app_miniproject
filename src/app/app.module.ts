@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { shoppingListReducer } from './store/reducers/shopping-list.reducer';
 import { authReducer } from './store/reducers/auth.reducer';
@@ -14,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -27,6 +29,7 @@ import { HeaderComponent } from './header/header.component';
       shoppingList: shoppingListReducer,
       auth: authReducer,
     }),
+    StoreDevtoolsModule.instrument({ logOnly: !environment.production }),
     EffectsModule.forRoot([AuthEffects]),
   ],
   bootstrap: [AppComponent],
