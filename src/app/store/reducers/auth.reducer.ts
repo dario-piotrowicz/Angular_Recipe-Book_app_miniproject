@@ -6,6 +6,7 @@ import { AuthState } from '../states';
 
 const initialState: AuthState = {
   user: null,
+  loading: false,
 };
 
 const _authReducer = createReducer(
@@ -13,10 +14,23 @@ const _authReducer = createReducer(
   on(AuthActions.logIn, (state, { user }) => ({
     ...state,
     user,
+    loading: false,
   })),
   on(AuthActions.logOut, (state) => ({
     ...state,
     user: null,
+    loading: false,
+  })),
+  on(AuthActions.singInRequestStart, (state) => ({
+    ...state,
+    errorMessage: null,
+    loading: true,
+  })),
+  on(AuthActions.singInRequestError, (state, { errorMessage }) => ({
+    ...state,
+    user: null,
+    errorMessage,
+    loading: false,
   }))
 );
 

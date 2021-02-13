@@ -1,9 +1,12 @@
 <div class="row mt-5">
   <div class="col-md-6 offset-md-3 col-12">
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
+    <div
+      *ngIf="errorMessage | async as errorMessageString"
+      class="alert alert-danger"
+    >
+      {{ errorMessageString }}
     </div>
-    <div *ngIf="loading; else notLoading" class="spinner-container">
+    <div *ngIf="loading | async; else notLoading" class="spinner-container">
       <app-loading-spinner></app-loading-spinner>
     </div>
     <ng-template #notLoading>

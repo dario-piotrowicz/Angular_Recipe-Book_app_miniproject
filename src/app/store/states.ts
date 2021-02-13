@@ -8,6 +8,8 @@ export interface ShoppingListState {
 
 export interface AuthState {
   user: User;
+  loading: boolean;
+  errorMessage?: string;
 }
 
 export interface AppState {

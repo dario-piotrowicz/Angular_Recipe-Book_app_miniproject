@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../services/auth.service';
 import {
@@ -15,18 +15,28 @@ import { Router } from '@angular/router';
   templateUrl: './auth-page.component.html',
   styleUrls: ['./auth-page.component.css'],
 })
-export class AuthPageComponent implements OnInit {
-  public loading = false;
-  public errorMessage: string = null;
+export class AuthPageComponent implements OnInit, OnDestroy {
+  public loading: Observable<boolean>;
+  public errorMessage: Observable<string>;
+  private authenticatedUserSubscription: Subscription;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loading = this.authService.isLoading;
+    this.errorMessage = this.authService.errorMessage;
+    this.authenticatedUserSubscription = this.authService.authenticatedUser
+      .pipe(filter((user) => !!user))
+      .subscribe(() => this.router.navigate(['/recipes']));
+  }
+
+  ngOnDestroy(): void {
+    this.authenticatedUserSubscription.unsubscribe();
+  }
 
   onSubmitHandler(submitterName: string, form: NgForm) {
     if (form.invalid) return;
 
-    this.loading = true;
     const { email, password } = form.value;
     form.reset();
     if (submitterName === 'sign-in') {
@@ -37,8 +47,7 @@ export class AuthPageComponent implements OnInit {
   }
 
   private handleSignIn(email: string, password: string): void {
-    const requestObs = this.authService.signIn(email, password);
-    this.handleSignInOrSignUpServiceRequest(requestObs);
+    this.authService.signIn(email, password);
   }
 
   private handleSignUp(email: string, password: string): void {
@@ -49,7 +58,7 @@ export class AuthPageComponent implements OnInit {
   private handleSignInOrSignUpServiceRequest(
     requestObs: Observable<AuthSignUpResponse | AuthSignInResponse>
   ): void {
-    requestObs.pipe(finalize(() => (this.loading = false))).subscribe(
+    requestObs.subscribe(
       () => {
         this.router.navigate(['/recipes']);
       },

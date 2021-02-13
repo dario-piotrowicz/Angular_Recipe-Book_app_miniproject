@@ -5,7 +5,11 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
-import { selectUser } from '../store/selectors/auth.selectors';
+import {
+  selectErrorMessage,
+  selectLoading,
+  selectUser,
+} from '../store/selectors/auth.selectors';
 import * as AuthActions from '../store/actions/auth.actions';
 
 import {
@@ -49,23 +53,16 @@ export class AuthService {
       );
   }
 
-  public signIn(
-    email: string,
-    password: string
-  ): Observable<AuthSignInResponse> {
-    return this.http
-      .post<AuthSignInResponse>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.ApiKey}`,
-        {
-          email,
-          password,
-          returnSecureToken: true,
-        }
-      )
-      .pipe(
-        catchError(this.authSignInOrSignUpCatchErrorFunction),
-        this.saveAuthenticatedUser
-      );
+  public get isLoading(): Observable<boolean> {
+    return this.store.select(selectLoading);
+  }
+
+  public get errorMessage(): Observable<string> {
+    return this.store.select(selectErrorMessage);
+  }
+
+  public signIn(email: string, password: string): void {
+    this.store.dispatch(AuthActions.singInRequestStart({ email, password }));
   }
 
   public logOut(): void {

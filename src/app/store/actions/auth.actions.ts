@@ -1,6 +1,16 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../models/user.model';
 
+export const singInRequestStart = createAction(
+  '[AuthService] signIn Request Start',
+  props<{ email: string; password: string }>()
+);
+
+export const singInRequestError = createAction(
+  '[AuthService] signIn Request Error',
+  props<{ errorMessage: string }>()
+);
+
 export const logIn = createAction(
   '[AuthService] LogIn',
   props<{ user: User }>()
