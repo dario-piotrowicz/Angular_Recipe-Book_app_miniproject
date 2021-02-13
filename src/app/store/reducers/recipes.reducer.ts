@@ -38,7 +38,44 @@ const _recipesReducer = createReducer(
   on(RecipesActions.resetRecipes, (state, { recipes }) => ({
     ...state,
     recipes: recipes.slice(),
-  }))
+  })),
+  on(RecipesActions.addRecipe, (state, { recipe }) => ({
+    ...state,
+    recipes: [...state.recipes, recipe],
+  })),
+  on(RecipesActions.updateRecipe, (state, { recipeId, recipe }) => {
+    const recipeIdx = state.recipes.findIndex(
+      (recipe) => recipe.id === recipeId
+    );
+    const recipes =
+      recipeIdx < 0
+        ? state.recipes.slice()
+        : [
+            ...state.recipes.slice(0, recipeIdx),
+            { ...recipe },
+            ...state.recipes.slice(recipeIdx + 1),
+          ];
+    return {
+      ...state,
+      recipes,
+    };
+  }),
+  on(RecipesActions.deleteRecipe, (state, { recipeId }) => {
+    const recipeIdx = state.recipes.findIndex(
+      (recipe) => recipe.id === recipeId
+    );
+    const recipes =
+      recipeIdx < 0
+        ? state.recipes.slice()
+        : [
+            ...state.recipes.slice(0, recipeIdx),
+            ...state.recipes.slice(recipeIdx + 1),
+          ];
+    return {
+      ...state,
+      recipes,
+    };
+  })
 );
 
 export function recipesReducer(state: RecipesState, action: Action) {

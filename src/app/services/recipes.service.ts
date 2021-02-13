@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 import { selectRecipes } from '../store/selectors/recipes.selectors';
 
 import { Recipe } from '../models/recipe.model';
-import { resetRecipes } from '../store/actions/recipes.actions';
-import { map, take } from 'rxjs/operators';
+import {
+  addRecipe,
+  deleteRecipe,
+  resetRecipes,
+  updateRecipe,
+} from '../store/actions/recipes.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -33,27 +39,14 @@ export class RecipesService {
   }
 
   public addRecipe(recipe: Recipe): void {
-    // this._recipes.push({ ...recipe });
-    // this._recipesListChanged.next();
+    this.store.dispatch(addRecipe({ recipe }));
   }
 
   public updateRecipe(recipeId: string, recipe: Recipe): void {
-    // const recipeIdx = this._recipes.findIndex(
-    //   (recipe) => recipe.id === recipeId
-    // );
-    // if (recipeIdx >= 0) {
-    //   this._recipes[recipeIdx] = { ...recipe };
-    //   this._recipesListChanged.next();
-    // }
+    this.store.dispatch(updateRecipe({ recipeId, recipe }));
   }
 
   public deleteRecipe(recipeId: string): void {
-    // const recipeIdx = this._recipes.findIndex(
-    //   (recipe) => recipe.id === recipeId
-    // );
-    // if (recipeIdx >= 0) {
-    //   this._recipes.splice(recipeIdx, 1);
-    //   this._recipesListChanged.next();
-    // }
+    this.store.dispatch(deleteRecipe({ recipeId }));
   }
 }
