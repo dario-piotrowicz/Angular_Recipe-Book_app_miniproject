@@ -12,6 +12,8 @@ import {
   deleteRecipe,
   resetRecipes,
   updateRecipe,
+  loadRecipes,
+  saveRecipes,
 } from '../store/actions/recipes.actions';
 
 @Injectable({
@@ -48,5 +50,13 @@ export class RecipesService {
 
   public deleteRecipe(recipeId: string): void {
     this.store.dispatch(deleteRecipe({ recipeId }));
+  }
+
+  public loadRecipes(): void {
+    this.store.dispatch(loadRecipes());
+  }
+
+  public saveRecipes(): void {
+    this.store.dispatch(saveRecipes());
   }
 }

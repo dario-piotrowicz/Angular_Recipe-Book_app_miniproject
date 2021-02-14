@@ -20,3 +20,7 @@ export const deleteRecipe = createAction(
   '[RecipesService] Delete Recipe',
   props<{ recipeId: string }>()
 );
+
+export const loadRecipes = createAction('[RecipesService] Load Recipes');
+
+export const saveRecipes = createAction('[RecipesService] Save Recipes');
