@@ -64,13 +64,7 @@ const _recipesReducer = createReducer(
     const recipeIdx = state.recipes.findIndex(
       (recipe) => recipe.id === recipeId
     );
-    const recipes =
-      recipeIdx < 0
-        ? state.recipes.slice()
-        : [
-            ...state.recipes.slice(0, recipeIdx),
-            ...state.recipes.slice(recipeIdx + 1),
-          ];
+    const recipes = state.recipes.filter((_, idx) => idx !== recipeIdx);
     return {
       ...state,
       recipes,
