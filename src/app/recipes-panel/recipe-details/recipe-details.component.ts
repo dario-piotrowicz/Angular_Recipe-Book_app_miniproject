@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { Recipe } from 'src/app/models/recipe.model';
 import { RecipesService } from 'src/app/services/recipes.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
@@ -20,10 +21,11 @@ export class RecipeDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      (params) =>
-        (this.recipe = this.recipesService.getRecipeById(params['id']))
-    );
+    this.route.params
+      .pipe(
+        mergeMap((params) => this.recipesService.getRecipeById(params['id']))
+      )
+      .subscribe((recipe) => (this.recipe = recipe));
   }
 
   public onAddIngredientsToShoppingListEventHandler(): void {

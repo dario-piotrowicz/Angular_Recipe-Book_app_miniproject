@@ -33,10 +33,10 @@
             type="submit"
             [disabled]="form.invalid"
           >
-            {{ indexSelectedForEditing < 0 ? "Add" : "Update" }}
+            {{ editing ? "Update" : "Add" }}
           </button>
           <button
-            *ngIf="indexSelectedForEditing >= 0"
+            *ngIf="editing"
             class="btn btn-danger m-1"
             type="button"
             (click)="deleteSelectedItem()"

@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { RecipesService } from '../services/recipes.service';
 import { AuthService } from '../services/auth.service';
-import { DataNetworkService } from '../services/data-network.service';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -15,7 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userAuthenticationSubscription: Subscription = null;
 
   constructor(
-    private dataNetworkService: DataNetworkService,
+    private recipesService: RecipesService,
     private authService: AuthService
   ) {}
 
@@ -30,11 +29,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public onSaveDataHandler(): void {
-    this.dataNetworkService.saveRecipes();
+    this.recipesService.saveRecipes();
   }
 
   public onFatchDataHandler(): void {
-    this.dataNetworkService.loadRecipes();
+    this.recipesService.loadRecipes();
   }
 
   public onLogOutHandler(): void {

@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import {
+  selectSelectedIngredientForEditing,
+  selectIngredientsList,
+} from '../store/selectors/shopping-list.selectors';
+import * as ShoppingListActions from '../store/actions/shopping-list.actions';
 
 import { Ingredient } from '../models/ingredient.model';
 
@@ -7,57 +14,43 @@ import { Ingredient } from '../models/ingredient.model';
   providedIn: 'root',
 })
 export class ShoppingListService {
-  private _ingredientsListChanged = new Subject<void>();
+  private _ingredientsList$: Observable<Ingredient[]> = null;
 
-  private _ingredientItemSelectedForEditing = new Subject<number>();
+  constructor(private store: Store) {
+    this._ingredientsList$ = this.store.select(selectIngredientsList);
+  }
 
-  private _ingredientsList: Ingredient[] = [
-    new Ingredient('apples', 5),
-    new Ingredient('tomatoes', 10),
-  ];
-
-  constructor() {}
-
-  public get ingredientsList(): Ingredient[] {
-    return this._ingredientsList.slice();
+  public get ingredientsList$(): Observable<Ingredient[]> {
+    return this._ingredientsList$;
   }
 
   public addItemsToIngredientsList(items: Ingredient[]) {
-    items.forEach((item) => this._ingredientsList.push({ ...item }));
-    this._ingredientsListChanged.next();
+    this.store.dispatch(
+      ShoppingListActions.addIngredients({ ingredients: items })
+    );
   }
 
-  public get onIngredientsListChanged(): Observable<void> {
-    return this._ingredientsListChanged.asObservable();
+  public selectIngredientForEditing(index: number) {
+    this.store.dispatch(
+      ShoppingListActions.selectIngredientForEditing({ index })
+    );
   }
 
-  public publishIngredientItemSelectedForEditing(index: number) {
-    this._ingredientItemSelectedForEditing.next(index);
+  public unselectIngredientForEditing() {
+    this.store.dispatch(ShoppingListActions.unselectIngredientForEditing());
   }
 
-  public get onIngredientItemSelectedForEditing(): Observable<number> {
-    return this._ingredientItemSelectedForEditing.asObservable();
+  public get selectedIngredientForEditing(): Observable<Ingredient> {
+    return this.store.select(selectSelectedIngredientForEditing);
   }
 
-  public getIngredientAt(index: number): Ingredient {
-    if (index < 0 || index >= this._ingredientsList.length) {
-      return null;
-    } else {
-      return { ...this._ingredientsList[index] };
-    }
+  public updateSelectedIngredient(ingredient: Ingredient): void {
+    this.store.dispatch(
+      ShoppingListActions.updateSelectedIngredient({ ingredient })
+    );
   }
 
-  public setIngredientAt(index: number, ingredient: Ingredient): void {
-    if (index >= 0 || index < this._ingredientsList.length) {
-      this._ingredientsList[index] = { ...ingredient };
-      this._ingredientsListChanged.next();
-    }
-  }
-
-  public deletetIngredientAt(index: number): void {
-    if (index >= 0 || index < this._ingredientsList.length) {
-      this._ingredientsList.splice(index, 1);
-      this._ingredientsListChanged.next();
-    }
+  public deletetSelectedIngredient(): void {
+    this.store.dispatch(ShoppingListActions.deleteSelectedIngredient());
   }
 }

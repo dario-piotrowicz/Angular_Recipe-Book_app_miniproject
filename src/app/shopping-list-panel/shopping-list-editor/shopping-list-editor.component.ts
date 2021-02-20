@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
@@ -11,27 +12,25 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
 })
 export class ShoppingListEditorComponent implements OnInit, OnDestroy {
   private itemSelectedSubscription: Subscription;
-  public indexSelectedForEditing: number = -1;
+  public editing = false;
   @ViewChild('form') form: NgForm;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit(): void {
-    this.itemSelectedSubscription = this.shoppingListService.onIngredientItemSelectedForEditing.subscribe(
-      (index) => {
-        this.indexSelectedForEditing = index;
-        const selectedIngredient = this.shoppingListService.getIngredientAt(
-          index
-        );
-        this.form.reset({
-          ...selectedIngredient,
-        });
-      }
-    );
+    this.itemSelectedSubscription = this.shoppingListService.selectedIngredientForEditing
+      .pipe(tap((selectedIngredient) => (this.editing = !!selectedIngredient)))
+      .subscribe((selectedIngredient) => {
+        const resetObj = selectedIngredient ? { ...selectedIngredient } : {};
+        if (this.form) {
+          this.form.reset(resetObj);
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.itemSelectedSubscription.unsubscribe();
+    this.shoppingListService.unselectIngredientForEditing();
   }
 
   public addOrEditIngredient(): void {
@@ -39,24 +38,23 @@ export class ShoppingListEditorComponent implements OnInit, OnDestroy {
       this.form.value.name,
       this.form.value.amount
     );
-    if (this.indexSelectedForEditing < 0) {
-      this.shoppingListService.addItemsToIngredientsList([newIngredient]);
+    if (this.editing) {
+      this.shoppingListService.updateSelectedIngredient(newIngredient);
+      this.shoppingListService.unselectIngredientForEditing();
     } else {
-      this.shoppingListService.setIngredientAt(
-        this.indexSelectedForEditing,
-        newIngredient
-      );
+      this.shoppingListService.addItemsToIngredientsList([newIngredient]);
     }
     this.clearForm();
   }
 
   public clearForm(): void {
     this.form.reset();
-    this.indexSelectedForEditing = -1;
+    this.editing = false;
+    this.shoppingListService.unselectIngredientForEditing();
   }
 
   public deleteSelectedItem(): void {
-    this.shoppingListService.deletetIngredientAt(this.indexSelectedForEditing);
+    this.shoppingListService.deletetSelectedIngredient();
     this.clearForm();
   }
 }
