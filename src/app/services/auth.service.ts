@@ -80,13 +80,15 @@ export class AuthService {
       const tokenExpirationDate = new Date(
         localStorageUserData.authTokenExpirationDate
       );
-      const userFromLocalStorage = new User(
-        localStorageUserData.id,
-        localStorageUserData.email,
-        localStorageUserData._authToken,
-        tokenExpirationDate
-      );
-      this.store.dispatch(AuthActions.logIn({ user: userFromLocalStorage }));
+      if (tokenExpirationDate.getTime() > new Date().getTime()) {
+        const userFromLocalStorage = new User(
+          localStorageUserData.id,
+          localStorageUserData.email,
+          localStorageUserData._authToken,
+          tokenExpirationDate
+        );
+        this.store.dispatch(AuthActions.logIn({ user: userFromLocalStorage }));
+      }
     }
   }
 
