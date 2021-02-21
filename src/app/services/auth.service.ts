@@ -88,6 +88,8 @@ export class AuthService {
           tokenExpirationDate
         );
         this.store.dispatch(AuthActions.logIn({ user: userFromLocalStorage }));
+      } else {
+        localStorage.removeItem(this.localStorageUserKey);
       }
     }
   }
